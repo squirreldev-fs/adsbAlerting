@@ -31,6 +31,7 @@ CONFIG += c++11
 
 SOURCES += \
         aircraft.cpp \
+        aircraftadsb.cpp \
         aircraftlist.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -38,6 +39,7 @@ SOURCES += \
 
 HEADERS += \
         aircraft.h \
+        aircraftadsb.h \
         aircraftlist.h \
         mainwindow.h \
         picture.h
