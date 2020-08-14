@@ -27,6 +27,9 @@ public:
     explicit MainWindow(QWidget *parent = nullptr, QString database = "");
     ~MainWindow();
 
+    void setInfoVisi(bool visible);
+    void resetInfo();
+
 public slots:
     void establishConnection();
     void connectionErrorsH(QAbstractSocket::SocketError error);
@@ -34,9 +37,7 @@ public slots:
     void onReadyRead();
     void aknowlegeAlerts();
 
-    void setInfoVisi(bool visible);
-    void resetInfo();
-
+    void filterAcfList();
     void redrawAcfList();
 
     void reloadDatabase();
@@ -52,7 +53,6 @@ public slots:
 
     void updateLiveInfo();
     void updateListInfo(QString icao, ColumnsType column, QString value);
-    void removeFromList(QString icao);
 
     void toggleMute();
 
@@ -72,6 +72,8 @@ private:
 
     AircraftList interestingAcf; // From Database
     AircraftList seenAcf; // From ADSB messages
+
+    bool showingOnlyRecognized = false;
 
     QTimer alarmTimer;
     const int alarmIntervalMS = 5000;

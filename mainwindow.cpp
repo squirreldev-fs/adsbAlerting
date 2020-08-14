@@ -36,8 +36,8 @@ MainWindow::MainWindow(QWidget *parent, QString database) :
     connect(&_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectionErrorsH(QAbstractSocket::SocketError)));
     connect(&connectionTimer, SIGNAL(timeout()), this, SLOT(establishConnection()));
     connect(&_socket, SIGNAL(connected()), this, SLOT(connectionEstablished()));
+    connect(ui->bAcfTableFilter, SIGNAL(clicked()), this, SLOT(filterAcfList()));
     connect(ui->bAcknowlege, SIGNAL(clicked()), this, SLOT(aknowlegeAlerts()));
-    connect(ui->bResetList, SIGNAL(clicked()), this, SLOT(redrawAcfList()));
     connect(ui->bReloadDB, SIGNAL(clicked()), this, SLOT(reloadDatabase()));
     connect(&alarmTimer, SIGNAL(timeout()), this, SLOT(triggerAlerts()));
     connect(ui->splitter, SIGNAL(clicked()), this, SLOT(toggleInfoVisi()));
@@ -102,7 +102,6 @@ void MainWindow::onReadyRead()
                 else if(seenAcf[i].notSeenForSec() > awayTimeMin*60 && interestingAcf.indexOfIcao(icao) < 0)
                 {
                     seenAcf.removeAt(i);
-                    removeFromList(icao);
                     redrawAcfList();
                 }
                 else
@@ -190,6 +189,12 @@ void MainWindow::aknowlegeAlerts()
     ui->bAcknowlege->setEnabled(false);
 }
 
+void MainWindow::filterAcfList()
+{
+    showingOnlyRecognized = ui->bAcfTableFilter->isChecked();
+    redrawAcfList();
+}
+
 void MainWindow::redrawAcfList()
 {
     this->resetInfo();
@@ -197,10 +202,13 @@ void MainWindow::redrawAcfList()
 
     for(int i=0;i<seenAcf.size();i++)
     {
-        ui->acfTable->insertRow(0);
-        ui->acfTable->setItem(0,0,new QTableWidgetItem(seenAcf.at(i).getIcao()));
-        ui->acfTable->setItem(0,1,new QTableWidgetItem(seenAcf.at(i).getCallsignLive()));
-        ui->acfTable->setItem(0,2,new QTableWidgetItem(QString::number(seenAcf.at(i).getAltitude())));
+        if(!showingOnlyRecognized || interestingAcf.contains(seenAcf[i].getIcao()))
+        {
+            ui->acfTable->insertRow(0);
+            ui->acfTable->setItem(0,0,new QTableWidgetItem(seenAcf.at(i).getIcao()));
+            ui->acfTable->setItem(0,1,new QTableWidgetItem(seenAcf.at(i).getCallsignLive()));
+            ui->acfTable->setItem(0,2,new QTableWidgetItem(QString::number(seenAcf.at(i).getAltitude())));
+        }
     }
 }
 
@@ -350,8 +358,11 @@ void MainWindow::updateListInfo(QString icao, ColumnsType column, QString value)
     switch(column)
     {
     case IcaoClmn:
-        ui->acfTable->insertRow(0);
-        ui->acfTable->setItem(0,IcaoClmn,new QTableWidgetItem(value));
+        if(!showingOnlyRecognized || interestingAcf.contains(icao))
+        {
+            ui->acfTable->insertRow(0);
+            ui->acfTable->setItem(0,IcaoClmn,new QTableWidgetItem(value));
+        }
         break;
     default:
         for(int i=0;i<ui->acfTable->rowCount();i++)
@@ -361,23 +372,6 @@ void MainWindow::updateListInfo(QString icao, ColumnsType column, QString value)
             {
                 ui->acfTable->setItem(i,column,new QTableWidgetItem(value));
             }
-        }
-    }
-}
-
-void MainWindow::removeFromList(QString icao)
-{
-    int i=0;
-    while(i<ui->acfTable->rowCount())
-    {
-        QTableWidgetItem* item = ui->acfTable->item(i, 0);
-        if(item && item->text() == icao)
-        {
-            ui->acfTable->removeRow(i);
-        }
-        else
-        {
-            i++;
         }
     }
 }
