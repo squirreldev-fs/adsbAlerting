@@ -3,9 +3,12 @@
 
 #include "aircraft.h"
 
+enum AlertStatus{NoAlert, AlertRaised, AlertAcknowledged};
+
 class AircraftADSB : public Aircraft
 {
 public:
+    AircraftADSB(QString icao);
     AircraftADSB(QString icao, QString registration, QString callsign, QString location, QString type, QString version);
 
     void setAltitude(int alti);
@@ -29,21 +32,21 @@ public:
     void seen();
     int notSeenForSec() const;
 
-    void setAcknowleged(bool ack);
-    bool isKnown();
+    void setAlertStatus(AlertStatus status);
+    AlertStatus getAlertStatus();
 
 private:
-    int altitude=0;
-    int speed=0;
-    int heading=0;
-    float latitude=0.f;
-    float longitude=0.f;
-    int verticalSpeed=0;
-    int squawk=0;
+    int altitude = 0;
+    int speed = 0;
+    int heading = 0;
+    float latitude = 0.f;
+    float longitude = 0.f;
+    int verticalSpeed = 0;
+    int squawk = 0;
 
-    QString callsignLive="";
+    QString callsignLive = "";
     QTime lastSeen;
-    bool acknowleged;
+    AlertStatus alertStatus = NoAlert;
 };
 
 #endif // AIRCRAFTADSB_H

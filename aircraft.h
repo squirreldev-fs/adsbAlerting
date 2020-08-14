@@ -19,12 +19,12 @@ public:
     bool operator==(const QString& icao) const;
 
 private:
-    QString icao;
-    QString registration;
-    QString callsign;
-    QString location;
-    QString version;
-    QString type;
+    QString icao = "";
+    QString registration = "";
+    QString callsign = "";
+    QString location = "";
+    QString version = "";
+    QString type = "";
 };
 
 #endif // AIRCRAFT_H

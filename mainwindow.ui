@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>760</width>
+    <width>809</width>
     <height>580</height>
    </rect>
   </property>
@@ -61,6 +61,18 @@
              <height>0</height>
             </size>
            </property>
+           <property name="cursor" stdset="0">
+            <cursorShape>ArrowCursor</cursorShape>
+           </property>
+           <property name="midLineWidth">
+            <number>0</number>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAsNeeded</enum>
+           </property>
+           <property name="sizeAdjustPolicy">
+            <enum>QAbstractScrollArea::AdjustIgnored</enum>
+           </property>
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
            </property>
@@ -70,32 +82,55 @@
            <property name="selectionBehavior">
             <enum>QAbstractItemView::SelectRows</enum>
            </property>
+           <property name="gridStyle">
+            <enum>Qt::SolidLine</enum>
+           </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+           <property name="rowCount">
+            <number>0</number>
+           </property>
+           <property name="columnCount">
+            <number>3</number>
+           </property>
            <attribute name="horizontalHeaderVisible">
             <bool>false</bool>
            </attribute>
            <attribute name="horizontalHeaderCascadingSectionResizes">
-            <bool>true</bool>
+            <bool>false</bool>
            </attribute>
            <attribute name="horizontalHeaderMinimumSectionSize">
-            <number>150</number>
+            <number>68</number>
            </attribute>
            <attribute name="horizontalHeaderDefaultSectionSize">
-            <number>150</number>
+            <number>100</number>
            </attribute>
            <attribute name="horizontalHeaderStretchLastSection">
-            <bool>false</bool>
+            <bool>true</bool>
            </attribute>
            <attribute name="verticalHeaderVisible">
             <bool>false</bool>
            </attribute>
+           <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderStretchLastSection">
+            <bool>false</bool>
+           </attribute>
            <column>
             <property name="text">
-             <string>Transponder</string>
+             <string>ICAO</string>
             </property>
            </column>
            <column>
             <property name="text">
-             <string>Immatriculation</string>
+             <string>Reg/Call</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Alti</string>
             </property>
            </column>
           </widget>
@@ -179,13 +214,6 @@
           <widget class="Line" name="lineDev">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="bResetList">
-           <property name="text">
-            <string>Reset list</string>
            </property>
           </widget>
          </item>

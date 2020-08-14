@@ -10,9 +10,10 @@
 #include <QProcess>
 #include <QMessageBox>
 
-#include "aircraft.h"
 #include "aircraftlist.h"
 #include "picture.h"
+
+enum ColumnsType{IcaoClmn, CallsignClmn, AltiClmn};
 
 namespace Ui {
 class MainWindow;
@@ -26,24 +27,35 @@ public:
     explicit MainWindow(QWidget *parent = nullptr, QString database = "");
     ~MainWindow();
 
-    void setInfoVisi(bool visible);
-    void resetInfo();
-
 public slots:
     void establishConnection();
     void connectionErrorsH(QAbstractSocket::SocketError error);
     void connectionEstablished();
     void onReadyRead();
     void aknowlegeAlerts();
-    void clearAcfList();
+
+    void setInfoVisi(bool visible);
+    void resetInfo();
+
+    void redrawAcfList();
+
     void reloadDatabase();
+
     void triggerAlerts();
+
     void toggleInfoVisi();
     void resizeWindow();
+
     void newAcfSelected();
+
     void addTestAircraft();
+
     void updateLiveInfo();
+    void updateListInfo(QString icao, ColumnsType column, QString value);
+    void removeFromList(QString icao);
+
     void toggleMute();
+
     void lauchDump1090();
     void readDumpOutput();
 
@@ -58,12 +70,12 @@ private:
 
     Picture picture;
 
-    AircraftList interestingAcf;
-    AircraftList seenAcf;
+    AircraftList interestingAcf; // From Database
+    AircraftList seenAcf; // From ADSB messages
 
     QTimer alarmTimer;
     const int alarmIntervalMS = 5000;
-    const int awayTimeMin = 10;
+    const int awayTimeMin = 5;
     QIcon soundIcon;
     QIcon mutedIcon;
     bool muted = false;

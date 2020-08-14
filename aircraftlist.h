@@ -3,9 +3,9 @@
 
 #include <QList>
 
-#include "aircraft.h"
+#include "aircraftadsb.h"
 
-class AircraftList: public QList<Aircraft>
+class AircraftList: public QList<AircraftADSB>
 {
 public:
     AircraftList();

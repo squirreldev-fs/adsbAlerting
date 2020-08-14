@@ -28,7 +28,6 @@ Aircraft::Aircraft(QString icao, QString registration, QString callsign, QString
     this->location = location;
     this->type = type;
     this->version = version;
-    acknowleged = false;
 }
 
 QString Aircraft::getIcao() const

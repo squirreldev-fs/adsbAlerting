@@ -1,9 +1,15 @@
 #include "aircraftadsb.h"
 
+AircraftADSB::AircraftADSB(QString icao) :
+    Aircraft(icao, "unknown", "unknown", "unknown", "unknown", "unknown")
+{
+    lastSeen = QTime::currentTime();
+}
+
 AircraftADSB::AircraftADSB(QString icao, QString registration, QString callsign, QString location, QString type, QString version) :
     Aircraft(icao, registration, callsign, location, type, version)
 {
-
+    lastSeen = QTime::currentTime();
 }
 
 // Flight data
@@ -102,12 +108,12 @@ int AircraftADSB::notSeenForSec() const
 
 // Alerts
 
-void AircraftADSB::setAcknowleged(bool ack)
+void AircraftADSB::setAlertStatus(AlertStatus status)
 {
-    acknowleged = ack;
+    alertStatus = status;
 }
 
-bool AircraftADSB::isKnown()
+AlertStatus AircraftADSB::getAlertStatus()
 {
-    return acknowleged;
+    return alertStatus;
 }
