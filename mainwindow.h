@@ -49,7 +49,7 @@ public slots:
 
     void newAcfSelected();
 
-    void addTestAircraft();
+    void addToDatabase();
 
     void updateLiveInfo();
     void updateListInfo(QString icao, ColumnsType column, QString value);
@@ -83,8 +83,6 @@ private:
     bool muted = false;
 
     QTimer liveTimer;
-
-    bool addingTestAcf = false;
 
     QProcess process;
 

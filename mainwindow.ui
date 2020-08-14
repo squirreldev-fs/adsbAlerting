@@ -81,7 +81,7 @@
             <number>0</number>
            </property>
            <property name="horizontalScrollBarPolicy">
-            <enum>Qt::ScrollBarAsNeeded</enum>
+            <enum>Qt::ScrollBarAlwaysOff</enum>
            </property>
            <property name="sizeAdjustPolicy">
             <enum>QAbstractScrollArea::AdjustIgnored</enum>
@@ -238,9 +238,9 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="bAddTest">
+          <widget class="QPushButton" name="bAddToDB">
            <property name="text">
-            <string>Add test aircraft</string>
+            <string>Add selected to database</string>
            </property>
           </widget>
          </item>
