@@ -35,26 +35,22 @@ public slots:
     void connectionErrorsH(QAbstractSocket::SocketError error);
     void connectionEstablished();
     void onReadyRead();
+
     void aknowlegeAlerts();
+    void triggerAlerts();
+    void toggleMute();
 
     void filterAcfList();
     void redrawAcfList();
+    void newAcfSelected();
+    void updateListInfo(QString icao, ColumnsType column, QString value);
 
     void reloadDatabase();
-
-    void triggerAlerts();
+    void addToDatabase();
 
     void toggleInfoVisi();
     void resizeWindow();
-
-    void newAcfSelected();
-
-    void addToDatabase();
-
     void updateLiveInfo();
-    void updateListInfo(QString icao, ColumnsType column, QString value);
-
-    void toggleMute();
 
     void lauchDump1090();
     void readDumpOutput();
@@ -70,19 +66,19 @@ private:
 
     Picture picture;
 
-    AircraftList interestingAcf; // From Database
+    AircraftList interestingAcf; // From database
     AircraftList seenAcf; // From ADSB messages
 
     bool showingOnlyRecognized = false;
 
     QTimer alarmTimer;
     const int alarmIntervalMS = 5000;
-    const int awayTimeMin = 5;
     QIcon soundIcon;
     QIcon mutedIcon;
     bool muted = false;
 
     QTimer liveTimer;
+    const int awayTimeMin = 5;
 
     QProcess process;
 

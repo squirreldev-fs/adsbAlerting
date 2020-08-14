@@ -189,6 +189,41 @@ void MainWindow::aknowlegeAlerts()
     ui->bAcknowlege->setEnabled(false);
 }
 
+void MainWindow::triggerAlerts()
+{
+    bool alarm = false;
+    for(int i=0;i<seenAcf.size();i++)
+    {
+        if(seenAcf[i].getAlertStatus() == AlertRaised)
+        {
+            alarm = true;
+        }
+    }
+    if(alarm)
+    {
+        if(!muted)
+        {
+            QSound::play("D:/Cam_Laptop/Documents/Aeronautique/ADSB/resources/bell.wav");
+        }
+    }
+    else
+    {
+        alarmTimer.stop();
+    }
+}
+
+void MainWindow::toggleMute()
+{
+    muted = !muted;
+    if(muted)
+    {
+        ui->bMute->setIcon(mutedIcon);
+    }
+    else {
+        ui->bMute->setIcon(soundIcon);
+    }
+}
+
 void MainWindow::filterAcfList()
 {
     showingOnlyRecognized = ui->bAcfTableFilter->isChecked();
@@ -208,6 +243,56 @@ void MainWindow::redrawAcfList()
             ui->acfTable->setItem(0,0,new QTableWidgetItem(seenAcf.at(i).getIcao()));
             ui->acfTable->setItem(0,1,new QTableWidgetItem(seenAcf.at(i).getCallsignLive()));
             ui->acfTable->setItem(0,2,new QTableWidgetItem(QString::number(seenAcf.at(i).getAltitude())));
+        }
+    }
+}
+
+void MainWindow::newAcfSelected()
+{
+    resetInfo();
+    if(!seenAcf.isEmpty() && ui->acfTable->rowCount() > 0)
+    {
+        int row = ui->acfTable->currentRow();
+        if(row >= 0 && row < ui->acfTable->rowCount()) // meaningful selection
+        {
+            QString icao = ui->acfTable->item(row, 0)->text();
+            int index = interestingAcf.indexOfIcao(icao);
+            if(index > -1)
+            {
+                Aircraft acf = interestingAcf[index]; // DATABASE
+                // based on registration because of test aircraft
+
+                ui->immatriculationField->setText(acf.getRegistration());
+                ui->typeField->setText(acf.getType());
+                ui->versionField->setText(acf.getVersion());
+                ui->callsignField->setText(acf.getCallsign());
+                ui->baseField->setText(acf.getLocation());
+                picture.setPicturePath("D:/Cam_Laptop/Documents/Aeronautique/ADSB/resources/"+acf.getRegistration()+".jpg");
+                this->updateLiveInfo();
+            }
+        }
+    }
+}
+
+void MainWindow::updateListInfo(QString icao, ColumnsType column, QString value)
+{
+    switch(column)
+    {
+    case IcaoClmn:
+        if(!showingOnlyRecognized || interestingAcf.contains(icao))
+        {
+            ui->acfTable->insertRow(0);
+            ui->acfTable->setItem(0,IcaoClmn,new QTableWidgetItem(value));
+        }
+        break;
+    default:
+        for(int i=0;i<ui->acfTable->rowCount();i++)
+        {
+            QTableWidgetItem* item = ui->acfTable->item(i, 0);
+            if(item && item->text() == icao)
+            {
+                ui->acfTable->setItem(i,column,new QTableWidgetItem(value));
+            }
         }
     }
 }
@@ -238,26 +323,26 @@ void MainWindow::reloadDatabase()
     }
 }
 
-void MainWindow::triggerAlerts()
+void MainWindow::addToDatabase()
 {
-    bool alarm = false;
-    for(int i=0;i<seenAcf.size();i++)
+    if(!seenAcf.isEmpty() && ui->acfTable->rowCount() > 0)
     {
-        if(seenAcf[i].getAlertStatus() == AlertRaised)
+        int row = ui->acfTable->currentRow();
+        if(row >= 0 && row < ui->acfTable->rowCount()) // meaningful selection
         {
-            alarm = true;
+            QString icao = ui->acfTable->item(row, 0)->text();
+            int index = interestingAcf.indexOfIcao(icao);
+            if(index < 0) // not existing yet
+            {
+                interestingAcf.append(AircraftADSB(icao));
+                if(database.open(QIODevice::Append))
+                {
+                    QString newLine = ",,,,," + icao + ",,,\r\n";
+                    database.write(newLine.toStdString().c_str());
+                }
+                database.close();
+            }
         }
-    }
-    if(alarm)
-    {
-        if(!muted)
-        {
-            QSound::play("D:/Cam_Laptop/Documents/Aeronautique/ADSB/resources/bell.wav");
-        }
-    }
-    else
-    {
-        alarmTimer.stop();
     }
 }
 
@@ -284,33 +369,6 @@ void MainWindow::toggleInfoVisi()
 void MainWindow::resizeWindow()
 {
     this->resize(smallWidth, this->height());
-}
-
-void MainWindow::newAcfSelected()
-{
-    resetInfo();
-    if(!seenAcf.isEmpty() && ui->acfTable->rowCount() > 0)
-    {
-        int row = ui->acfTable->currentRow();
-        if(row >= 0 && row < ui->acfTable->rowCount()) // meaningful selection
-        {
-            QString icao = ui->acfTable->item(row, 0)->text();
-            int index = interestingAcf.indexOfIcao(icao);
-            if(index > -1)
-            {
-                Aircraft acf = interestingAcf[index]; // DATABASE
-                // based on registration because of test aircraft
-
-                ui->immatriculationField->setText(acf.getRegistration());
-                ui->typeField->setText(acf.getType());
-                ui->versionField->setText(acf.getVersion());
-                ui->callsignField->setText(acf.getCallsign());
-                ui->baseField->setText(acf.getLocation());
-                picture.setPicturePath("D:/Cam_Laptop/Documents/Aeronautique/ADSB/resources/"+acf.getRegistration()+".jpg");
-                this->updateLiveInfo();
-            }
-        }
-    }
 }
 
 void MainWindow::updateLiveInfo()
@@ -353,29 +411,6 @@ void MainWindow::updateLiveInfo()
     }
 }
 
-void MainWindow::updateListInfo(QString icao, ColumnsType column, QString value)
-{
-    switch(column)
-    {
-    case IcaoClmn:
-        if(!showingOnlyRecognized || interestingAcf.contains(icao))
-        {
-            ui->acfTable->insertRow(0);
-            ui->acfTable->setItem(0,IcaoClmn,new QTableWidgetItem(value));
-        }
-        break;
-    default:
-        for(int i=0;i<ui->acfTable->rowCount();i++)
-        {
-            QTableWidgetItem* item = ui->acfTable->item(i, 0);
-            if(item && item->text() == icao)
-            {
-                ui->acfTable->setItem(i,column,new QTableWidgetItem(value));
-            }
-        }
-    }
-}
-
 void MainWindow::resetInfo()
 {
     ui->immatriculationField->setText("");
@@ -393,41 +428,6 @@ void MainWindow::resetInfo()
     ui->longitudeField->setText("");
     ui->radioInLive->setChecked(false);
     picture.setPicturePath("");
-}
-
-void MainWindow::addToDatabase()
-{
-    if(!seenAcf.isEmpty() && ui->acfTable->rowCount() > 0)
-    {
-        int row = ui->acfTable->currentRow();
-        if(row >= 0 && row < ui->acfTable->rowCount()) // meaningful selection
-        {
-            QString icao = ui->acfTable->item(row, 0)->text();
-            int index = interestingAcf.indexOfIcao(icao);
-            if(index < 0) // not existing yet
-            {
-                interestingAcf.append(AircraftADSB(icao));
-                if(database.open(QIODevice::Append))
-                {
-                    QString newLine = ",,,,," + icao + ",,,\r\n";
-                    database.write(newLine.toStdString().c_str());
-                }
-                database.close();
-            }
-        }
-    }
-}
-
-void MainWindow::toggleMute()
-{
-    muted = !muted;
-    if(muted)
-    {
-        ui->bMute->setIcon(mutedIcon);
-    }
-    else {
-        ui->bMute->setIcon(soundIcon);
-    }
 }
 
 void MainWindow::lauchDump1090()
