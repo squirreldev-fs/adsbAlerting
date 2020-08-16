@@ -310,7 +310,7 @@
            <item row="0" column="0">
             <widget class="QLabel" name="immatriculation">
              <property name="text">
-              <string>Immatriculation</string>
+              <string>Registration</string>
              </property>
             </widget>
            </item>
