@@ -6,6 +6,8 @@
 #include <QProcess>
 #include <QMessageBox>
 #include <QDir>
+#include <QDesktopServices>
+#include <QUrl>
 
 #ifdef WIN32
     #include <Windows.h>
@@ -49,6 +51,8 @@ MainWindow::MainWindow(AircraftList *live, AircraftList *database, QString datab
     // Dump1090 launcher
     connect(ui->bDump1090, SIGNAL(clicked()), this, SLOT(lauchDump1090()));
     connect(&process, SIGNAL(readyReadStandardOutput()), this, SLOT(readDumpOutput()));
+
+    connect(ui->bWebInfo, SIGNAL(clicked()), this, SLOT(LaunchWebForInfo()));
 
     // init
     ui->bAcknowlege->setEnabled(false);
@@ -368,5 +372,18 @@ void MainWindow::readDumpOutput()
         msgBox.setText("Dump1090 may be already running.");
         msgBox.setIcon(QMessageBox::Critical);
         msgBox.exec();
+    }
+}
+
+void MainWindow::LaunchWebForInfo()
+{
+    if(!seenAcf->isEmpty() && ui->acfTable->rowCount() > 0)
+    {
+        int row = ui->acfTable->currentRow();
+        if(row >= 0 && row < ui->acfTable->rowCount()) // meaningful selection
+        {
+            QString icao = ui->acfTable->item(row, 0)->text();
+            QDesktopServices::openUrl(QUrl("https://opensky-network.org/aircraft-profile?icao24="+icao));
+        }
     }
 }

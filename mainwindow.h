@@ -54,6 +54,8 @@ public slots:
     void lauchDump1090();
     void readDumpOutput();
 
+    void LaunchWebForInfo();
+
 private:
     Ui::MainWindow *ui;
 
