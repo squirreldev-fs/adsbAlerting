@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 
 #include <QDebug>
-#include <QHostAddress>
 #include <QSound>
 #include <QProcess>
 #include <QMessageBox>
@@ -11,12 +10,14 @@
     #include <Windows.h>
 #endif
 
-MainWindow::MainWindow(QWidget *parent, QString database) :
+MainWindow::MainWindow(AircraftList *live, AircraftList *database, QString databasePath, QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    _socket(this)
+    ui(new Ui::MainWindow)
 {
-    this->database.setFileName(database);
+    seenAcf = live;
+    interestingAcf = database;
+
+    this->database.setFileName(databasePath);
 
     // windows
     ui->setupUi(this);
@@ -29,13 +30,6 @@ MainWindow::MainWindow(QWidget *parent, QString database) :
     mutedIcon = QIcon("D:/Cam_Laptop/Documents/Aeronautique/ADSB/resources/muted.png");
     ui->bMute->setIcon(soundIcon);
 
-    // connection to dump 1090
-    connectionTimer.setSingleShot(true);
-    establishConnection();
-    connect(&_socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-    connect(&_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectionErrorsH(QAbstractSocket::SocketError)));
-    connect(&connectionTimer, SIGNAL(timeout()), this, SLOT(establishConnection()));
-    connect(&_socket, SIGNAL(connected()), this, SLOT(connectionEstablished()));
     connect(ui->bAcfTableFilter, SIGNAL(clicked()), this, SLOT(filterAcfList()));
     connect(ui->bAcknowlege, SIGNAL(clicked()), this, SLOT(aknowlegeAlerts()));
     connect(ui->bReloadDB, SIGNAL(clicked()), this, SLOT(reloadDatabase()));
@@ -43,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent, QString database) :
     connect(ui->splitter, SIGNAL(clicked()), this, SLOT(toggleInfoVisi()));
     connect(ui->acfTable, SIGNAL(itemSelectionChanged()), this, SLOT(newAcfSelected()));
     connect(ui->bAddToDB, SIGNAL(clicked()), this, SLOT(addToDatabase()));
+
     // mute / restor sound for alerts
     connect(ui->bMute, SIGNAL(clicked()), this, SLOT(toggleMute()));
     liveTimer.setSingleShot(true);
@@ -63,127 +58,28 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::establishConnection()
+void MainWindow::connectionFailed()
 {
-    _socket.connectToHost(QHostAddress("127.0.0.1"), 30003);
-}
-
-void MainWindow::connectionErrorsH(QAbstractSocket::SocketError)
-{
-    _socket.abort();
-    _socket.close();
-    connectionTimer.start(2000);
     ui->bDump1090->setEnabled(true);
 }
 
-void MainWindow::connectionEstablished()
+void MainWindow::connectionSucceeded()
 {
     ui->bDump1090->setEnabled(false);
 }
 
-
-void MainWindow::onReadyRead()
+void MainWindow::raiseAlert()
 {
-    QString line = _socket.readAll();
-    QStringList data = line.split(",");
-    if(data.size() == 22)
-    {
-        QString icao = data.at(4);
-        if(icao != "")
-        {
-            int i=0;
-            while(i<seenAcf.size()) // remove acf not seen for a while
-            {
-                if(seenAcf[i].getIcao() == icao)
-                {
-                    seenAcf[i].seen();
-                    i++;
-                }
-                else if(seenAcf[i].notSeenForSec() > awayTimeMin*60 && interestingAcf.indexOfIcao(icao) < 0)
-                {
-                    seenAcf.removeAt(i);
-                    redrawAcfList();
-                }
-                else
-                {
-                    i++;
-                }
-            }
-
-            if(!seenAcf.contains(icao)) // new aircraft
-            {
-                AircraftADSB acf = AircraftADSB(icao);
-                if(interestingAcf.contains(icao)) // get info from database
-                {
-                    acf = interestingAcf[interestingAcf.indexOfIcao(icao)];
-                }
-
-                seenAcf.append(acf);
-                updateListInfo(icao, IcaoClmn, icao);
-
-                if(interestingAcf.contains(icao)) // alarm
-                {
-                    seenAcf.back().setAlertStatus(AlertRaised);
-                    this->triggerAlerts();
-                    alarmTimer.start(alarmIntervalMS);
-                    ui->bAcknowlege->setEnabled(true);
-                }
-            }
-
-            if(data.at(10) != "")
-            {
-                QString callsign = data.at(10);
-                seenAcf[seenAcf.indexOfIcao(icao)].setCallsignLive(callsign);
-                updateListInfo(icao, CallsignClmn, callsign);
-            }
-            if(data.at(11) != "")
-            {
-                int alti = data.at(11).toInt();
-                seenAcf[seenAcf.indexOfIcao(icao)].setAltitude(alti);
-                updateListInfo(icao, AltiClmn, QString::number(alti));
-            }
-            if(data.at(12) != "")
-            {
-                int spd = data.at(12).toInt();
-                seenAcf[seenAcf.indexOfIcao(icao)].setSpeed(spd);
-            }
-            if(data.at(13) != "")
-            {
-                int hdg = data.at(13).toInt();
-                seenAcf[seenAcf.indexOfIcao(icao)].setHeading(hdg);
-            }
-            if(data.at(14) != "")
-            {
-                float lat = data.at(14).toFloat();
-                seenAcf[seenAcf.indexOfIcao(icao)].setLatitude(lat);
-            }
-            if(data.at(15) != "")
-            {
-                float lon = data.at(15).toFloat();
-                seenAcf[seenAcf.indexOfIcao(icao)].setLongitude(lon);
-            }
-            if(data.at(16) != "")
-            {
-                int vSpd = data.at(16).toInt();
-                seenAcf[seenAcf.indexOfIcao(icao)].setVerticalSpeed(vSpd);
-            }
-            if(data.at(17) != "")
-            {
-                int sqk = data.at(17).toInt();
-                seenAcf[seenAcf.indexOfIcao(icao)].setSqawk(sqk);
-            }
-            updateLiveInfo();
-        }
-    }
-    // connect again if no message for 1 min
-    connectionTimer.start(60000);
+    triggerAlerts();
+    alarmTimer.start(alarmIntervalMS);
+    ui->bAcknowlege->setEnabled(true);
 }
 
 void MainWindow::aknowlegeAlerts()
 {
-    for(int i=0;i<seenAcf.size();i++)
+    for(int i=0;i<seenAcf->size();i++)
     {
-        seenAcf[i].setAlertStatus(AlertAcknowledged);
+        (*seenAcf)[i].setAlertStatus(AlertAcknowledged);
     }
     alarmTimer.stop();
     ui->bAcknowlege->setEnabled(false);
@@ -192,9 +88,9 @@ void MainWindow::aknowlegeAlerts()
 void MainWindow::triggerAlerts()
 {
     bool alarm = false;
-    for(int i=0;i<seenAcf.size();i++)
+    for(int i=0;i<seenAcf->size();i++)
     {
-        if(seenAcf[i].getAlertStatus() == AlertRaised)
+        if(seenAcf->at(i).getAlertStatus() == AlertRaised)
         {
             alarm = true;
         }
@@ -235,14 +131,14 @@ void MainWindow::redrawAcfList()
     this->resetInfo();
     ui->acfTable->setRowCount(0);
 
-    for(int i=0;i<seenAcf.size();i++)
+    for(int i=0;i<seenAcf->size();i++)
     {
-        if(!showingOnlyRecognized || interestingAcf.contains(seenAcf[i].getIcao()))
+        if(!showingOnlyRecognized || interestingAcf->contains(seenAcf->at(i).getIcao()))
         {
             ui->acfTable->insertRow(0);
-            ui->acfTable->setItem(0,0,new QTableWidgetItem(seenAcf.at(i).getIcao()));
-            ui->acfTable->setItem(0,1,new QTableWidgetItem(seenAcf.at(i).getCallsignLive()));
-            ui->acfTable->setItem(0,2,new QTableWidgetItem(QString::number(seenAcf.at(i).getAltitude())));
+            ui->acfTable->setItem(0,0,new QTableWidgetItem(seenAcf->at(i).getIcao()));
+            ui->acfTable->setItem(0,1,new QTableWidgetItem(seenAcf->at(i).getCallsignLive()));
+            ui->acfTable->setItem(0,2,new QTableWidgetItem(QString::number(seenAcf->at(i).getAltitude())));
         }
     }
 }
@@ -250,16 +146,16 @@ void MainWindow::redrawAcfList()
 void MainWindow::newAcfSelected()
 {
     resetInfo();
-    if(!seenAcf.isEmpty() && ui->acfTable->rowCount() > 0)
+    if(!seenAcf->isEmpty() && ui->acfTable->rowCount() > 0)
     {
         int row = ui->acfTable->currentRow();
         if(row >= 0 && row < ui->acfTable->rowCount()) // meaningful selection
         {
             QString icao = ui->acfTable->item(row, 0)->text();
-            int index = interestingAcf.indexOfIcao(icao);
+            int index = interestingAcf->indexOfIcao(icao);
             if(index > -1)
             {
-                Aircraft acf = interestingAcf[index]; // DATABASE
+                Aircraft acf = interestingAcf->at(index); // DATABASE
                 // based on registration because of test aircraft
 
                 ui->immatriculationField->setText(acf.getRegistration());
@@ -279,7 +175,7 @@ void MainWindow::updateListInfo(QString icao, ColumnsType column, QString value)
     switch(column)
     {
     case IcaoClmn:
-        if(!showingOnlyRecognized || interestingAcf.contains(icao))
+        if(!showingOnlyRecognized || interestingAcf->contains(icao))
         {
             ui->acfTable->insertRow(0);
             ui->acfTable->setItem(0,IcaoClmn,new QTableWidgetItem(value));
@@ -288,7 +184,7 @@ void MainWindow::updateListInfo(QString icao, ColumnsType column, QString value)
     default:
         for(int i=0;i<ui->acfTable->rowCount();i++)
         {
-            QTableWidgetItem* item = ui->acfTable->item(i, 0);
+            QTableWidgetItem *item = ui->acfTable->item(i, 0);
             if(item && item->text() == icao)
             {
                 ui->acfTable->setItem(i,column,new QTableWidgetItem(value));
@@ -300,7 +196,7 @@ void MainWindow::updateListInfo(QString icao, ColumnsType column, QString value)
 void MainWindow::reloadDatabase()
 {
     if (database.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        interestingAcf.clear();
+        interestingAcf->clear();
         database.readLine(); // skip titles
         while (!database.atEnd()) {
             QList<QByteArray> line = database.readLine().split(',');
@@ -317,7 +213,7 @@ void MainWindow::reloadDatabase()
             QString version = line.at(2);
             version=version.remove('"');
             AircraftADSB acf = AircraftADSB(icao, registration, callsign, location, type, version);
-            interestingAcf.append(acf);
+            interestingAcf->append(acf);
         }
         database.close();
     }
@@ -325,16 +221,16 @@ void MainWindow::reloadDatabase()
 
 void MainWindow::addToDatabase()
 {
-    if(!seenAcf.isEmpty() && ui->acfTable->rowCount() > 0)
+    if(!seenAcf->isEmpty() && ui->acfTable->rowCount() > 0)
     {
         int row = ui->acfTable->currentRow();
         if(row >= 0 && row < ui->acfTable->rowCount()) // meaningful selection
         {
             QString icao = ui->acfTable->item(row, 0)->text();
-            int index = interestingAcf.indexOfIcao(icao);
+            int index = interestingAcf->indexOfIcao(icao);
             if(index < 0) // not existing yet
             {
-                interestingAcf.append(AircraftADSB(icao));
+                interestingAcf->append(AircraftADSB(icao));
                 if(database.open(QIODevice::Append))
                 {
                     QString newLine = ",,,,," + icao + ",,,\r\n";
@@ -373,14 +269,14 @@ void MainWindow::resizeWindow()
 
 void MainWindow::updateLiveInfo()
 {
-    if(!seenAcf.isEmpty() && ui->acfTable->currentRow() != -1)
+    if(!seenAcf->isEmpty() && ui->acfTable->currentRow() != -1)
     {
         int row = ui->acfTable->currentRow();
         QString icao = ui->acfTable->item(row, 0)->text();
-        int index = seenAcf.indexOfIcao(icao);
+        int index = seenAcf->indexOfIcao(icao);
         if(index > -1) // found
         {
-            AircraftADSB acf = seenAcf[index]; // SEEN DATABASE
+            AircraftADSB acf = seenAcf->at(index); // SEEN DATABASE
 
             ui->squawkField->setText(QString::number(acf.getSquawk()));
             ui->callsignLiveField->setText(acf.getCallsignLive());

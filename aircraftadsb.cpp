@@ -113,7 +113,7 @@ void AircraftADSB::setAlertStatus(AlertStatus status)
     alertStatus = status;
 }
 
-AlertStatus AircraftADSB::getAlertStatus()
+AlertStatus AircraftADSB::getAlertStatus() const
 {
     return alertStatus;
 }

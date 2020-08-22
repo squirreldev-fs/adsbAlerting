@@ -33,7 +33,7 @@ public:
     int notSeenForSec() const;
 
     void setAlertStatus(AlertStatus status);
-    AlertStatus getAlertStatus();
+    AlertStatus getAlertStatus() const;
 
 private:
     int altitude = 0;

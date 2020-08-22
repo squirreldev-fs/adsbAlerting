@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QTcpSocket>
 
 #include <QTimer>
 #include <QList>
@@ -24,18 +23,18 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr, QString database = "");
+    explicit MainWindow(AircraftList *live, AircraftList *database, QString databasePath = "", QWidget *parent = nullptr);
     ~MainWindow();
 
     void setInfoVisi(bool visible);
     void resetInfo();
 
-public slots:
-    void establishConnection();
-    void connectionErrorsH(QAbstractSocket::SocketError error);
-    void connectionEstablished();
-    void onReadyRead();
+    void connectionFailed();
+    void connectionSucceeded();
 
+    void raiseAlert();
+
+public slots:
     void aknowlegeAlerts();
     void triggerAlerts();
     void toggleMute();
@@ -57,8 +56,6 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-    QTcpSocket  _socket;
-    QTimer connectionTimer;
 
     QFile database;
     QTimer resizeTimer;
@@ -66,8 +63,8 @@ private:
 
     Picture picture;
 
-    AircraftList interestingAcf; // From database
-    AircraftList seenAcf; // From ADSB messages
+    AircraftList *interestingAcf; // From database
+    AircraftList *seenAcf; // From ADSB messages
 
     bool showingOnlyRecognized = false;
 
@@ -78,7 +75,6 @@ private:
     bool muted = false;
 
     QTimer liveTimer;
-    const int awayTimeMin = 5;
 
     QProcess process;
 

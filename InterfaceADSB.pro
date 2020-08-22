@@ -30,6 +30,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        adsbframereader.cpp \
         aircraft.cpp \
         aircraftadsb.cpp \
         aircraftlist.cpp \
@@ -38,6 +39,7 @@ SOURCES += \
         picture.cpp
 
 HEADERS += \
+        adsbframereader.h \
         aircraft.h \
         aircraftadsb.h \
         aircraftlist.h \
