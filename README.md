@@ -43,7 +43,7 @@ Information is organized in the following order:
 ## To be improved / added
 - [ ] Separate alerting list from database.
 - [ ] Large review of database, to make use of data available online.
-- [ ] Add a button to quickly access information on the internet about unknown aircraft.
+- [x] Add a button to quickly access information on the internet about unknown aircraft.
 - [ ] Use Window's notifications system, to alert the user even if the sound is muted- 
 - [ ] Create a UI more efficient to handle / sort a lot of aircraft.
 - [ ] Ensure to only loose the selection when unable to keep it.
