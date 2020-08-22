@@ -7,6 +7,8 @@ It shows all aircraft around and allows reading more details about them.
 Aircraft registered in the database will trigger an alert when detected for the first time.
 Thanks to this database, additional information can also displayed.
 
+Using dump1090 to access the ADS-B antenna and sent information over the network. This application then reads this information by opening a TCP socket.
+
 ## Setup
 ### main.cpp
 Three paths are defined in this file.
