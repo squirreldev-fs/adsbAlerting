@@ -12,7 +12,11 @@ int main(int argc, char *argv[])
     AircraftList acfDatabase;
     AircraftList acfLive;
 
-    MainWindow window(&acfLive, &acfDatabase, "D:/Cam_Laptop/Documents/Aeronautique/ADSB/database.csv");
+    MainWindow window(&acfLive, &acfDatabase,
+                      "D:/Cam_Laptop/Documents/Aeronautique/ADSB/database.csv",
+                      "D:/Cam_Laptop/Documents/Aeronautique/ADSB/resources/",
+                      "D:/Applications/dump1090-win/dump1090.exe");
+
     ADSBFrameReader adsbReader(&acfLive, &acfDatabase, &window);
 
     window.show();

@@ -5,12 +5,13 @@
 #include <QSound>
 #include <QProcess>
 #include <QMessageBox>
+#include <QDir>
 
 #ifdef WIN32
     #include <Windows.h>
 #endif
 
-MainWindow::MainWindow(AircraftList *live, AircraftList *database, QString databasePath, QWidget *parent) :
+MainWindow::MainWindow(AircraftList *live, AircraftList *database, QString databasePath, QString ressourcesPath, QString dump1090App, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -18,6 +19,8 @@ MainWindow::MainWindow(AircraftList *live, AircraftList *database, QString datab
     interestingAcf = database;
 
     this->database.setFileName(databasePath);
+    this->ressourcesPath = ressourcesPath;
+    this->dump1090App = dump1090App;
 
     // windows
     ui->setupUi(this);
@@ -26,8 +29,8 @@ MainWindow::MainWindow(AircraftList *live, AircraftList *database, QString datab
 
     ui->infoLayout->insertWidget(0, &picture);
 
-    soundIcon = QIcon("D:/Cam_Laptop/Documents/Aeronautique/ADSB/resources/sound.png");
-    mutedIcon = QIcon("D:/Cam_Laptop/Documents/Aeronautique/ADSB/resources/muted.png");
+    soundIcon = QIcon(ressourcesPath+"sound.png");
+    mutedIcon = QIcon(ressourcesPath+"muted.png");
     ui->bMute->setIcon(soundIcon);
 
     connect(ui->bAcfTableFilter, SIGNAL(clicked()), this, SLOT(filterAcfList()));
@@ -99,7 +102,7 @@ void MainWindow::triggerAlerts()
     {
         if(!muted)
         {
-            QSound::play("D:/Cam_Laptop/Documents/Aeronautique/ADSB/resources/bell.wav");
+            QSound::play(ressourcesPath+"bell.wav");
         }
     }
     else
@@ -163,7 +166,7 @@ void MainWindow::newAcfSelected()
                 ui->versionField->setText(acf.getVersion());
                 ui->callsignField->setText(acf.getCallsign());
                 ui->baseField->setText(acf.getLocation());
-                picture.setPicturePath("D:/Cam_Laptop/Documents/Aeronautique/ADSB/resources/"+acf.getRegistration()+".jpg");
+                picture.setPicturePath(ressourcesPath+acf.getRegistration()+".jpg");
                 this->updateLiveInfo();
             }
         }
@@ -328,23 +331,23 @@ void MainWindow::resetInfo()
 
 void MainWindow::lauchDump1090()
 {
-    QString dir = "D:/Applications/dump1090-win/";
-    QString app = dir+"dump1090.exe";
 #ifdef WIN32
     process.setCreateProcessArgumentsModifier([] (QProcess::CreateProcessArguments *args)
     {
         args->flags &= ~ulong(CREATE_NO_WINDOW);
     });
 #endif
-    process.setProgram(app);
+    process.setProgram(dump1090App);
     process.setArguments({"--net",
                          "--net-ro-size", "500",
                          "--net-ro-rate", "5",
                          "--net-buffer", "5",
                          "--ppm", "41",
-                         "--lat", "48.056038",
-                         "--lon", "7.075759"});
-    process.setWorkingDirectory(dir);
+                         "--lat", "48.72",
+                         "--lon", "10.78"});
+    QDir dir = QDir(dump1090App);
+    dir.cdUp();
+    process.setWorkingDirectory(dir.absolutePath());
     process.setProcessChannelMode(QProcess::MergedChannels);
     process.start();
 }

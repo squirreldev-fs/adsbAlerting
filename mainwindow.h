@@ -23,7 +23,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(AircraftList *live, AircraftList *database, QString databasePath = "", QWidget *parent = nullptr);
+    explicit MainWindow(AircraftList *live, AircraftList *database, QString databasePath = "", QString ressourcesPath = "", QString dump1090App = "dump1090.exe", QWidget *parent = nullptr);
     ~MainWindow();
 
     void setInfoVisi(bool visible);
@@ -58,6 +58,9 @@ private:
     Ui::MainWindow *ui;
 
     QFile database;
+    QString ressourcesPath;
+    QString dump1090App;
+
     QTimer resizeTimer;
     int smallWidth;
 
