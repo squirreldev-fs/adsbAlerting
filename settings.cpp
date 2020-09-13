@@ -64,6 +64,7 @@ void Settings::accept()
 
 void Settings::reject()
 {
+    readSettings();
     if(allPathsValid())
     {
         this->hide();
