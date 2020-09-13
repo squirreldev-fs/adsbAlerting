@@ -46,11 +46,11 @@ Information is organized in the following order:
 - [ ] Separate alerting list from database.
 - [ ] Large review of database, to make use of data available online.
 - [x] Add a button to quickly access information on the internet about unknown aircraft.
-- [ ] Use Window's notifications system, to alert the user even if the sound is muted- 
+- [ ] Use Window's notifications system, to alert the user even if the sound is muted. 
 - [ ] Create a UI more efficient to handle / sort a lot of aircraft.
 - [ ] Ensure to only loose the selection when unable to keep it.
 - [ ] Add a parameter in the UI to set the time after an aircraft is removed from the list.
-- [ ] Add a way to easily change database (not hard-coded).
+- [x] Add a way to easily change database (not hard-coded).
 - [x] Edit this readme to provide more details about "resources" folder (pictures and alarm sound).
 - [ ] Add a dump1090 settings window, to enter the what forms the command line.
 - [ ] Add a location selection when launching dump1090.
