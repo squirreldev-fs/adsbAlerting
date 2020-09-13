@@ -108,7 +108,7 @@
             <number>3</number>
            </property>
            <attribute name="horizontalHeaderVisible">
-            <bool>true</bool>
+            <bool>false</bool>
            </attribute>
            <attribute name="horizontalHeaderCascadingSectionResizes">
             <bool>false</bool>
@@ -248,6 +248,20 @@
           <widget class="QPushButton" name="bWebInfo">
            <property name="text">
             <string>Info on selected (web)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="bSettings">
+           <property name="text">
+            <string>Settings</string>
            </property>
           </widget>
          </item>

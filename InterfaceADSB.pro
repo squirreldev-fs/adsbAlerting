@@ -36,7 +36,8 @@ SOURCES += \
         aircraftlist.cpp \
         main.cpp \
         mainwindow.cpp \
-        picture.cpp
+        picture.cpp \
+        settings.cpp
 
 HEADERS += \
         adsbframereader.h \
@@ -44,10 +45,12 @@ HEADERS += \
         aircraftadsb.h \
         aircraftlist.h \
         mainwindow.h \
-        picture.h
+        picture.h \
+        settings.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+        settings.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

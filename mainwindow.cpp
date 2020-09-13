@@ -13,16 +13,14 @@
     #include <Windows.h>
 #endif
 
-MainWindow::MainWindow(AircraftList *live, AircraftList *database, QString databasePath, QString ressourcesPath, QString dump1090App, QWidget *parent) :
+MainWindow::MainWindow(AircraftList *live, AircraftList *database, Settings *settings, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     seenAcf = live;
     interestingAcf = database;
 
-    this->database.setFileName(databasePath);
-    this->ressourcesPath = ressourcesPath;
-    this->dump1090App = dump1090App;
+    this->settings = settings;
 
     // windows
     ui->setupUi(this);
@@ -31,8 +29,8 @@ MainWindow::MainWindow(AircraftList *live, AircraftList *database, QString datab
 
     ui->infoLayout->insertWidget(0, &picture);
 
-    soundIcon = QIcon(ressourcesPath+"sound.png");
-    mutedIcon = QIcon(ressourcesPath+"muted.png");
+    soundIcon = QIcon(settings->getResourcesPath()+"sound.png");
+    mutedIcon = QIcon(settings->getResourcesPath()+"muted.png");
     ui->bMute->setIcon(soundIcon);
 
     connect(ui->bAcfTableFilter, SIGNAL(clicked()), this, SLOT(filterAcfList()));
@@ -42,6 +40,7 @@ MainWindow::MainWindow(AircraftList *live, AircraftList *database, QString datab
     connect(ui->splitter, SIGNAL(clicked()), this, SLOT(toggleInfoVisi()));
     connect(ui->acfTable, SIGNAL(itemSelectionChanged()), this, SLOT(newAcfSelected()));
     connect(ui->bAddToDB, SIGNAL(clicked()), this, SLOT(addToDatabase()));
+    connect(ui->bSettings, SIGNAL(clicked()), settings, SLOT(show()));
 
     // mute / restor sound for alerts
     connect(ui->bMute, SIGNAL(clicked()), this, SLOT(toggleMute()));
@@ -106,7 +105,7 @@ void MainWindow::triggerAlerts()
     {
         if(!muted)
         {
-            QSound::play(ressourcesPath+"bell.wav");
+            QSound::play(settings->getResourcesPath()+"bell.wav");
         }
     }
     else
@@ -170,7 +169,7 @@ void MainWindow::newAcfSelected()
                 ui->versionField->setText(acf.getVersion());
                 ui->callsignField->setText(acf.getCallsign());
                 ui->baseField->setText(acf.getLocation());
-                picture.setPicturePath(ressourcesPath+acf.getRegistration()+".jpg");
+                picture.setPicturePath(settings->getResourcesPath()+acf.getRegistration()+".jpg");
                 this->updateLiveInfo();
             }
         }
@@ -202,11 +201,11 @@ void MainWindow::updateListInfo(QString icao, ColumnsType column, QString value)
 
 void MainWindow::reloadDatabase()
 {
-    if (database.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (settings->getDatabase()->open(QIODevice::ReadOnly | QIODevice::Text)) {
         interestingAcf->clear();
-        database.readLine(); // skip titles
-        while (!database.atEnd()) {
-            QList<QByteArray> line = database.readLine().split(',');
+        settings->getDatabase()->readLine(); // skip titles
+        while (!settings->getDatabase()->atEnd()) {
+            QList<QByteArray> line = settings->getDatabase()->readLine().split(',');
             QString icao = line.at(5);
             icao=icao.remove('"');
             QString registration = line.at(0);
@@ -222,7 +221,7 @@ void MainWindow::reloadDatabase()
             AircraftADSB acf = AircraftADSB(icao, registration, callsign, location, type, version);
             interestingAcf->append(acf);
         }
-        database.close();
+        settings->getDatabase()->close();
     }
 }
 
@@ -238,12 +237,12 @@ void MainWindow::addToDatabase()
             if(index < 0) // not existing yet
             {
                 interestingAcf->append(AircraftADSB(icao));
-                if(database.open(QIODevice::Append))
+                if(settings->getDatabase()->open(QIODevice::Append))
                 {
                     QString newLine = ",,,,," + icao + ",,,\r\n";
-                    database.write(newLine.toStdString().c_str());
+                    settings->getDatabase()->write(newLine.toStdString().c_str());
                 }
-                database.close();
+                settings->getDatabase()->close();
             }
         }
     }
@@ -341,7 +340,7 @@ void MainWindow::lauchDump1090()
         args->flags &= ~ulong(CREATE_NO_WINDOW);
     });
 #endif
-    process.setProgram(dump1090App);
+    process.setProgram(settings->getDump1090Path());
     process.setArguments({"--net",
                          "--net-ro-size", "500",
                          "--net-ro-rate", "5",
@@ -349,7 +348,7 @@ void MainWindow::lauchDump1090()
                          "--ppm", "41",
                          "--lat", "48.72",
                          "--lon", "10.78"});
-    QDir dir = QDir(dump1090App);
+    QDir dir = QDir(settings->getDump1090Path());
     dir.cdUp();
     process.setWorkingDirectory(dir.absolutePath());
     process.setProcessChannelMode(QProcess::MergedChannels);

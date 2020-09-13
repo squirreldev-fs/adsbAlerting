@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "settings.h"
 #include "aircraftlist.h"
 #include "adsbframereader.h"
 
@@ -12,14 +13,13 @@ int main(int argc, char *argv[])
     AircraftList acfDatabase;
     AircraftList acfLive;
 
-    MainWindow window(&acfLive, &acfDatabase,
-                      "D:/Cam_Laptop/Documents/Aeronautique/ADSB/database.csv",
-                      "D:/Cam_Laptop/Documents/Aeronautique/ADSB/resources/",
-                      "D:/Applications/dump1090-win/dump1090.exe");
+    Settings settings(&a);
+    MainWindow window(&acfLive, &acfDatabase, &settings);
 
     ADSBFrameReader adsbReader(&acfLive, &acfDatabase, &window);
 
     window.show();
+    settings.conditionalShow();
 
     return a.exec();
 }

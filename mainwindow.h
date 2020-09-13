@@ -11,6 +11,7 @@
 
 #include "aircraftlist.h"
 #include "picture.h"
+#include "settings.h"
 
 enum ColumnsType{IcaoClmn, CallsignClmn, AltiClmn};
 
@@ -23,7 +24,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(AircraftList *live, AircraftList *database, QString databasePath = "", QString ressourcesPath = "", QString dump1090App = "dump1090.exe", QWidget *parent = nullptr);
+    explicit MainWindow(AircraftList *live, AircraftList *database, Settings *settings, QWidget *parent = nullptr);
     ~MainWindow();
 
     void setInfoVisi(bool visible);
@@ -59,9 +60,7 @@ public slots:
 private:
     Ui::MainWindow *ui;
 
-    QFile database;
-    QString ressourcesPath;
-    QString dump1090App;
+    Settings *settings;
 
     QTimer resizeTimer;
     int smallWidth;

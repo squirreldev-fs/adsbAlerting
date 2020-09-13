@@ -75,3 +75,6 @@ Thumbs.db
 debug/
 release/
 sounds/
+
+# Settings
+settings.ini
