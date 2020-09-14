@@ -52,7 +52,7 @@ Information is organized in the following order:
 - [ ] Add a parameter in the UI to set the time after an aircraft is removed from the list.
 - [x] Add a way to easily change database (not hard-coded).
 - [x] Edit this readme to provide more details about "resources" folder (pictures and alarm sound).
-- [ ] Add a dump1090 settings window, to enter the what forms the command line.
+- [x] Add a dump1090 settings window, to enter the what forms the command line.
 - [ ] Add a location selection when launching dump1090.
 - [ ] Save favorite locations described right above (GPS coords + name).
 - [ ] Add a map to display aircraft with a known position.
