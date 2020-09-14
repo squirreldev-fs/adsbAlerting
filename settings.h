@@ -18,11 +18,16 @@ public:
     explicit Settings(QApplication *application, QWidget *parent = nullptr);
     ~Settings();
 
-    void refreshPaths();
+    void refreshDisplay();
 
     QFile* getDatabase();
     QString getResourcesPath();
     QString getDump1090Path();
+
+    int getPPM();
+    int getNetRoSize();
+    int getNetRoRate();
+    int getNetBuffer();
 
 public slots:
     void accept() override;
@@ -33,6 +38,11 @@ public slots:
     void setDatabasePath();
     void setResourcesPath();
     void setDump1090Path();
+
+    void setPPMShift(int value);
+    void setNetRoSize(int value);
+    void setNetRoRate(int value);
+    void setNetBuffer(int value);
 
 private:
     Ui::Settings *ui;
@@ -48,6 +58,11 @@ private:
     bool allPathsValid();
 
     QString getPathText(QFile *file);
+
+    int ppmShift = 0;
+    int netRoSize = 500;
+    int netRoRate = 5;
+    int netBuffer = 5;
 };
 
 #endif // SETTINGS_H

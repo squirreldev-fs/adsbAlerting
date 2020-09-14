@@ -17,9 +17,13 @@ Settings::Settings(QApplication *application, QWidget *parent) :
     connect(ui->databaseButton, SIGNAL(clicked()), this, SLOT(setDatabasePath()));
     connect(ui->resourcesButton, SIGNAL(clicked()), this, SLOT(setResourcesPath()));
     connect(ui->dump1090Button, SIGNAL(clicked()), this, SLOT(setDump1090Path()));
+    connect(ui->pPMShiftSpinBox, SIGNAL(valueChanged(int)), this, SLOT(setPPMShift(int)));
+    connect(ui->netRoSizeSpinBox, SIGNAL(valueChanged(int)), this, SLOT(setNetRoSize(int)));
+    connect(ui->netRoRateSpinBox, SIGNAL(valueChanged(int)), this, SLOT(setNetRoRate(int)));
+    connect(ui->netBufferSpinBox, SIGNAL(valueChanged(int)), this, SLOT(setNetBuffer(int)));
 
     readSettings();
-    refreshPaths();
+    refreshDisplay();
 }
 
 Settings::~Settings()
@@ -27,11 +31,15 @@ Settings::~Settings()
     delete ui;
 }
 
-void Settings::refreshPaths()
+void Settings::refreshDisplay()
 {
     ui->databaseButton->setText(getPathText(&databasePath));
     ui->resourcesButton->setText(getPathText(&resourcesPath));
     ui->dump1090Button->setText(getPathText(&dump1090Path));
+    ui->pPMShiftSpinBox->setValue(ppmShift);
+    ui->netRoSizeSpinBox->setValue(netRoSize);
+    ui->netRoRateSpinBox->setValue(netRoRate);
+    ui->netBufferSpinBox->setValue(netBuffer);
 }
 
 QFile* Settings::getDatabase()
@@ -47,6 +55,26 @@ QString Settings::getResourcesPath()
 QString Settings::getDump1090Path()
 {
     return dump1090Path.fileName();
+}
+
+int Settings::getPPM()
+{
+    return ppmShift;
+}
+
+int Settings::getNetRoSize()
+{
+    return netRoSize;
+}
+
+int Settings::getNetRoRate()
+{
+    return netRoRate;
+}
+
+int Settings::getNetBuffer()
+{
+    return netBuffer;
 }
 
 void Settings::accept()
@@ -87,19 +115,39 @@ void Settings::conditionalShow()
 void Settings::setDatabasePath()
 {
     databasePath.setFileName(QFileDialog::getOpenFileName(this, "Database", QString(), "CSV (*.csv)"));
-    refreshPaths();
+    refreshDisplay();
 }
 
 void Settings::setResourcesPath()
 {
     resourcesPath.setFileName(QFileDialog::getExistingDirectory(this));
-    refreshPaths();
+    refreshDisplay();
 }
 
 void Settings::setDump1090Path()
 {
     dump1090Path.setFileName(QFileDialog::getOpenFileName(this, "Dump1090", QString(), "Application (*)"));
-    refreshPaths();
+    refreshDisplay();
+}
+
+void Settings::setPPMShift(int value)
+{
+    ppmShift = value;
+}
+
+void Settings::setNetRoSize(int value)
+{
+    netRoSize = value;
+}
+
+void Settings::setNetRoRate(int value)
+{
+    netRoRate = value;
+}
+
+void Settings::setNetBuffer(int value)
+{
+    netBuffer = value;
 }
 
 void Settings::readSettings()
@@ -108,20 +156,40 @@ void Settings::readSettings()
     if(settingsReader)
     {
         std::string keyword, value;
-        while(settingsReader >> keyword >> value)
+        while(settingsReader >> keyword)
         {
             if("database" == keyword)
             {
+                settingsReader >> value;
                 databasePath.setFileName(value.c_str());
             }
             else if("resources" == keyword)
             {
+                settingsReader >> value;
                 resourcesPath.setFileName(value.c_str());
             }
             else if("dump1090" == keyword)
             {
+                settingsReader >> value;
                 dump1090Path.setFileName(value.c_str());
             }
+            else if("ppm" == keyword)
+            {
+                settingsReader >> ppmShift;
+            }
+            else if("net-ro-size" == keyword)
+            {
+                settingsReader >> netRoSize;
+            }
+            else if("net-ro-rate" == keyword)
+            {
+                settingsReader >> netRoRate;
+            }
+            else if("net-buffer" == keyword)
+            {
+                settingsReader >> netBuffer;
+            }
+
         }
     }
 }
@@ -133,7 +201,11 @@ void Settings::writeSettings()
     {
         settingsWriter << "database " << databasePath.fileName().toStdString() << std::endl
                        << "resources " << resourcesPath.fileName().toStdString() << std::endl
-                       << "dump1090 " << dump1090Path.fileName().toStdString() << std::endl;
+                       << "dump1090 " << dump1090Path.fileName().toStdString() << std::endl
+                       << "ppm " << ppmShift << std::endl
+                       << "net-ro-size " << netRoSize << std::endl
+                       << "net-ro-rate " << netRoRate << std::endl
+                       << "net-buffer " << netBuffer << std::endl;
     }
 }
 

@@ -342,10 +342,10 @@ void MainWindow::lauchDump1090()
 #endif
     process.setProgram(settings->getDump1090Path());
     process.setArguments({"--net",
-                         "--net-ro-size", "500",
-                         "--net-ro-rate", "5",
-                         "--net-buffer", "5",
-                         "--ppm", "41",
+                         "--net-ro-size", std::to_string(settings->getNetRoSize()).c_str(),
+                         "--net-ro-rate", std::to_string(settings->getNetRoRate()).c_str(),
+                         "--net-buffer", std::to_string(settings->getNetBuffer()).c_str(),
+                         "--ppm", std::to_string(settings->getPPM()).c_str(),
                          "--lat", "48.72",
                          "--lon", "10.78"});
     QDir dir = QDir(settings->getDump1090Path());
