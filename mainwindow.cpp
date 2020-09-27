@@ -1,3 +1,6 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -294,6 +297,25 @@ void MainWindow::updateLiveInfo()
             ui->headingField->setText(QString::number(acf.getHeading()));
             ui->latitudeField->setText(QString::number(double(acf.getLatitude())));
             ui->longitudeField->setText(QString::number(double(acf.getLongitude())));
+
+            double bearing = 0.;
+            double distance = 0.;
+            if(acf.getLatitude() * acf.getLongitude() != 0.)
+            {
+                double deltaLon = acf.getLongitude()-locations->getCurrentLocation().getLongitude();
+                deltaLon *= cos(locations->getCurrentLocation().getLatitude()*M_PI/180);
+                double deltaLat = acf.getLatitude()-locations->getCurrentLocation().getLatitude();
+
+                const double radiusEarth = 6371.;
+                distance = radiusEarth*sqrt(pow(deltaLon,2) + pow(deltaLat,2))*M_PI/180;
+
+                bearing = atan2(deltaLon, deltaLat);
+                bearing = bearing*180/M_PI;
+                if(bearing < 0) { bearing += 360; }
+            }
+            ui->distanceField->setText(QString::number(distance, 'f', 1));
+            ui->bearingField->setText(QString::number(bearing, 'f', 0));
+
             bool isInLive = acf.notSeenForSec() < 30;
             ui->radioInLive->setChecked(isInLive); // seen less than 30 sec ago
             if(isInLive)
@@ -330,6 +352,7 @@ void MainWindow::resetInfo()
     ui->headingField->setText("");
     ui->latitudeField->setText("");
     ui->longitudeField->setText("");
+    ui->bearingField->setText("");
     ui->radioInLive->setChecked(false);
     picture.setPicturePath("");
 }

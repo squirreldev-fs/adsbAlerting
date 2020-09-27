@@ -293,15 +293,15 @@
         <layout class="QVBoxLayout" name="infoLayout">
          <item>
           <layout class="QGridLayout" name="infoGridLayout">
-           <item row="9" column="0">
-            <widget class="QLabel" name="altitude">
+           <item row="13" column="1">
+            <widget class="QLabel" name="longitude">
              <property name="text">
-              <string>Altitude (ft)</string>
+              <string>Longitude</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLineEdit" name="immatriculationField">
+           <item row="10" column="0">
+            <widget class="QLineEdit" name="altitudeField">
              <property name="readOnly">
               <bool>true</bool>
              </property>
@@ -314,64 +314,6 @@
              </property>
             </widget>
            </item>
-           <item row="9" column="1">
-            <widget class="QLabel" name="vSpeed">
-             <property name="text">
-              <string>Vertical speed</string>
-             </property>
-            </widget>
-           </item>
-           <item row="10" column="0">
-            <widget class="QLineEdit" name="altitudeField">
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="1">
-            <widget class="QLineEdit" name="squawkField">
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="13" column="1">
-            <widget class="QLabel" name="longitude">
-             <property name="text">
-              <string>Longitude</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QRadioButton" name="radioInLive">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>In live</string>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="type">
-             <property name="text">
-              <string>Type</string>
-             </property>
-            </widget>
-           </item>
-           <item row="14" column="1">
-            <widget class="QLineEdit" name="longitudeField">
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
            <item row="11" column="1">
             <widget class="QLabel" name="heading">
              <property name="text">
@@ -379,64 +321,15 @@
              </property>
             </widget>
            </item>
-           <item row="14" column="0">
-            <widget class="QLineEdit" name="latitudeField">
+           <item row="10" column="1">
+            <widget class="QLineEdit" name="vSpeedField">
              <property name="readOnly">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="1" column="2">
-            <widget class="QLineEdit" name="baseField">
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="base">
-             <property name="text">
-              <string>Base</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="immatriculation">
-             <property name="text">
-              <string>Registration</string>
-             </property>
-            </widget>
-           </item>
-           <item row="12" column="1">
-            <widget class="QLineEdit" name="headingField">
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="11" column="0">
-            <widget class="QLabel" name="speed">
-             <property name="text">
-              <string>Speed (kts)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="version">
-             <property name="text">
-              <string>Version</string>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="1">
-            <widget class="QLabel" name="squawk">
-             <property name="text">
-              <string>Squawk</string>
-             </property>
-            </widget>
-           </item>
-           <item row="12" column="0">
-            <widget class="QLineEdit" name="speedField">
+           <item row="4" column="0">
+            <widget class="QLineEdit" name="typeField">
              <property name="readOnly">
               <bool>true</bool>
              </property>
@@ -456,17 +349,59 @@
              </property>
             </widget>
            </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="callsignLive">
-             <property name="text">
-              <string>Callsign</string>
+           <item row="14" column="0">
+            <widget class="QLineEdit" name="latitudeField">
+             <property name="readOnly">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="4" column="1">
-            <widget class="QLineEdit" name="versionField">
+           <item row="12" column="0">
+            <widget class="QLineEdit" name="speedField">
              <property name="readOnly">
               <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <widget class="QLabel" name="speed">
+             <property name="text">
+              <string>Speed (kts)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLabel" name="squawk">
+             <property name="text">
+              <string>Squawk</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLineEdit" name="squawkField">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="version">
+             <property name="text">
+              <string>Version</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="altitude">
+             <property name="text">
+              <string>Altitude (ft)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="immatriculation">
+             <property name="text">
+              <string>Registration</string>
              </property>
             </widget>
            </item>
@@ -477,17 +412,82 @@
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
-            <widget class="QLineEdit" name="typeField">
+           <item row="0" column="2">
+            <widget class="QLabel" name="base">
+             <property name="text">
+              <string>Base</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="1">
+            <widget class="QLineEdit" name="headingField">
              <property name="readOnly">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="10" column="1">
-            <widget class="QLineEdit" name="vSpeedField">
+           <item row="3" column="0">
+            <widget class="QLabel" name="type">
+             <property name="text">
+              <string>Type</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLineEdit" name="immatriculationField">
              <property name="readOnly">
               <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="1">
+            <widget class="QLineEdit" name="longitudeField">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLineEdit" name="baseField">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="callsignLive">
+             <property name="text">
+              <string>Callsign</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLabel" name="vSpeed">
+             <property name="text">
+              <string>Vertical speed</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="versionField">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QRadioButton" name="radioInLive">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>In live</string>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>20</width>
+               <height>20</height>
+              </size>
              </property>
             </widget>
            </item>
@@ -497,6 +497,26 @@
               <string>Latitude</string>
              </property>
             </widget>
+           </item>
+           <item row="15" column="1">
+            <widget class="QLabel" name="bearing">
+             <property name="text">
+              <string>Bearing</string>
+             </property>
+            </widget>
+           </item>
+           <item row="16" column="1">
+            <widget class="QLineEdit" name="bearingField"/>
+           </item>
+           <item row="15" column="0">
+            <widget class="QLabel" name="distance">
+             <property name="text">
+              <string>Distance</string>
+             </property>
+            </widget>
+           </item>
+           <item row="16" column="0">
+            <widget class="QLineEdit" name="distanceField"/>
            </item>
           </layout>
          </item>
