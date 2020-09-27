@@ -224,7 +224,7 @@ void MainWindow::updateListInfo(QString icao, ColumnsType column, QString value)
 
 void MainWindow::updateLocation()
 {
-    QString locationButtonText = locations->getCurrentLocation().getName() + " (change)";
+    QString locationButtonText = locations->getCurrentLocation().getName() + " (click to change)";
     ui->bChangeLocation->setText(locationButtonText);
 }
 

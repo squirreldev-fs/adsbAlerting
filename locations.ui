@@ -89,7 +89,7 @@
           <item>
            <widget class="QPushButton" name="buttonNewLocation">
             <property name="text">
-             <string>Save</string>
+             <string>Add this location to the list</string>
             </property>
            </widget>
           </item>
@@ -106,7 +106,7 @@
        <item>
         <widget class="QPushButton" name="buttonDeleteSelected">
          <property name="text">
-          <string>Delete selected</string>
+          <string>Delete selected location</string>
          </property>
         </widget>
        </item>
