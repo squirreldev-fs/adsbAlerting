@@ -73,6 +73,7 @@ private:
     AircraftList *seenAcf; // From ADSB messages
 
     bool showingOnlyRecognized = false;
+    QString selectedIcao = "";
 
     QTimer alarmTimer;
     const int alarmIntervalMS = 5000;

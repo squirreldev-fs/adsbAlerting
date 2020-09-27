@@ -142,15 +142,30 @@ void MainWindow::redrawAcfList()
     this->resetInfo();
     ui->acfTable->setRowCount(0);
 
+    int rowToBeSelectedIndex = -1;
     for(int i=0;i<seenAcf->size();i++)
     {
         if(!showingOnlyRecognized || interestingAcf->contains(seenAcf->at(i).getIcao()))
         {
+            if(rowToBeSelectedIndex > -1) { rowToBeSelectedIndex++; }
+
             ui->acfTable->insertRow(0);
-            ui->acfTable->setItem(0,0,new QTableWidgetItem(seenAcf->at(i).getIcao()));
+            QString icao = seenAcf->at(i).getIcao();
+            ui->acfTable->setItem(0,0,new QTableWidgetItem(icao));
             ui->acfTable->setItem(0,1,new QTableWidgetItem(seenAcf->at(i).getCallsignLive()));
             ui->acfTable->setItem(0,2,new QTableWidgetItem(QString::number(seenAcf->at(i).getAltitude())));
+
+            if(icao == selectedIcao) { rowToBeSelectedIndex = 0; }
         }
+    }
+
+    if(rowToBeSelectedIndex > -1)
+    {
+        ui->acfTable->selectRow(rowToBeSelectedIndex);
+    }
+    else
+    {
+        selectedIcao = "";
     }
 }
 
@@ -163,6 +178,7 @@ void MainWindow::newAcfSelected()
         if(row >= 0 && row < ui->acfTable->rowCount()) // meaningful selection
         {
             QString icao = ui->acfTable->item(row, 0)->text();
+            selectedIcao = icao;
             int index = interestingAcf->indexOfIcao(icao);
             if(index > -1)
             {
