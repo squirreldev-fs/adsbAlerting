@@ -8,6 +8,7 @@
 
 #include "aircraftlist.h"
 #include "mainwindow.h"
+#include "settings.h"
 
 struct ADSBFrameDescType
 {
@@ -29,7 +30,7 @@ class ADSBFrameReader : public QObject
     Q_OBJECT
 
 public:
-    ADSBFrameReader(AircraftList *live, AircraftList *database, MainWindow *gui, QObject *parent = nullptr);
+    ADSBFrameReader(AircraftList *live, AircraftList *database, MainWindow *gui, Settings *settings, QObject *parent = nullptr);
 
 public slots:
     void establishConnection();
@@ -46,13 +47,13 @@ private:
 
     ADSBFrameDescType adsbFrameDescr = {22, 4, 10, 11, 12, 13, 14, 15, 16, 17};
 
-    const int awayTime = 5; // min, if no frame from a specific acf reveived
     const int reconnectAfter = 1; // min, if no frame received
 
     AircraftList *interestingAcf; // From database
     AircraftList *seenAcf; // From ADSB messages
 
     MainWindow *userInterface;
+    Settings *settings;
 };
 
 #endif // ADSBFRAMEREADER_H

@@ -1,6 +1,6 @@
 #include "adsbframereader.h"
 
-ADSBFrameReader::ADSBFrameReader(AircraftList *live, AircraftList *database, MainWindow *gui, QObject *parent) : QObject(parent), tcpSocket(this)
+ADSBFrameReader::ADSBFrameReader(AircraftList *live, AircraftList *database, MainWindow *gui, Settings *settings, QObject *parent) : QObject(parent), tcpSocket(this)
 {
     interestingAcf = database;
     seenAcf = live;
@@ -15,6 +15,8 @@ ADSBFrameReader::ADSBFrameReader(AircraftList *live, AircraftList *database, Mai
     connect(&tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectionErrorsH(QAbstractSocket::SocketError)));
     connect(&connectionTimer, SIGNAL(timeout()), this, SLOT(establishConnection()));
     connect(&tcpSocket, SIGNAL(connected()), this, SLOT(connectionEstablished()));
+
+    this->settings = settings;
 }
 
 void ADSBFrameReader::establishConnection()
@@ -50,12 +52,13 @@ void ADSBFrameReader::onReadyRead()
             int i=0;
             while(i<seenAcf->size()) // remove acf not seen for a while
             {
+                int awayTime = settings->getMinutesBeforeRemoved()*60;
                 if(seenAcf->at(i).getIcao() == icao)
                 {
                     (*seenAcf)[i].seen();
                     i++;
                 }
-                else if(seenAcf->at(i).notSeenForSec() > awayTime*60 && interestingAcf->indexOfIcao(icao) < 0)
+                else if(seenAcf->at(i).notSeenForSec() > awayTime && interestingAcf->indexOfIcao(icao) < 0)
                 {
                     seenAcf->removeAt(i);
                     userInterface->redrawAcfList();

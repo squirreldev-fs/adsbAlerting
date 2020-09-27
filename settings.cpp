@@ -14,6 +14,7 @@ Settings::Settings(QApplication *application, QWidget *parent) :
 
     app = application;
 
+    connect(ui->minutesBeforeRemovingSpinBox, SIGNAL(valueChanged(int)), this, SLOT(setMinutesBeforeRemoved(int)));
     connect(ui->databaseButton, SIGNAL(clicked()), this, SLOT(setDatabasePath()));
     connect(ui->resourcesButton, SIGNAL(clicked()), this, SLOT(setResourcesPath()));
     connect(ui->dump1090Button, SIGNAL(clicked()), this, SLOT(setDump1090Path()));
@@ -33,6 +34,7 @@ Settings::~Settings()
 
 void Settings::refreshDisplay()
 {
+    ui->minutesBeforeRemovingSpinBox->setValue(minutesBeforeRemoved);
     ui->databaseButton->setText(getPathText(&databasePath));
     ui->resourcesButton->setText(getPathText(&resourcesPath));
     ui->dump1090Button->setText(getPathText(&dump1090Path));
@@ -40,6 +42,11 @@ void Settings::refreshDisplay()
     ui->netRoSizeSpinBox->setValue(netRoSize);
     ui->netRoRateSpinBox->setValue(netRoRate);
     ui->netBufferSpinBox->setValue(netBuffer);
+}
+
+int Settings::getMinutesBeforeRemoved()
+{
+    return minutesBeforeRemoved;
 }
 
 QFile* Settings::getDatabase()
@@ -112,6 +119,11 @@ void Settings::conditionalShow()
     }
 }
 
+void Settings::setMinutesBeforeRemoved(int value)
+{
+    minutesBeforeRemoved = value;
+}
+
 void Settings::setDatabasePath()
 {
     databasePath.setFileName(QFileDialog::getOpenFileName(this, "Database", QString(), "CSV (*.csv)"));
@@ -158,7 +170,11 @@ void Settings::readSettings()
         std::string keyword, value;
         while(settingsReader >> keyword)
         {
-            if("database" == keyword)
+            if("minutesBeforeRemoved" == keyword)
+            {
+                settingsReader >> minutesBeforeRemoved;
+            }
+            else if("database" == keyword)
             {
                 settingsReader >> value;
                 databasePath.setFileName(value.c_str());
@@ -199,7 +215,8 @@ void Settings::writeSettings()
     std::ofstream settingsWriter("settings.ini");
     if(settingsWriter)
     {
-        settingsWriter << "database " << databasePath.fileName().toStdString() << std::endl
+        settingsWriter << "minutesBeforeRemoved " << minutesBeforeRemoved << std::endl
+                       << "database " << databasePath.fileName().toStdString() << std::endl
                        << "resources " << resourcesPath.fileName().toStdString() << std::endl
                        << "dump1090 " << dump1090Path.fileName().toStdString() << std::endl
                        << "ppm " << ppmShift << std::endl

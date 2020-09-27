@@ -22,100 +22,124 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QFormLayout" name="formLayout">
-     <item row="0" column="0">
+     <item row="2" column="0">
       <widget class="QLabel" name="databaseLabel">
        <property name="text">
         <string>Database</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="resourcesLabel">
        <property name="text">
         <string>Resources</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="5" column="0">
       <widget class="QLabel" name="dump1090Label">
        <property name="text">
         <string>Dump1090</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item row="2" column="1">
       <widget class="QPushButton" name="databaseButton">
        <property name="text">
         <string>Set path</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="3" column="1">
       <widget class="QPushButton" name="resourcesButton">
        <property name="text">
         <string>Set path</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="5" column="1">
       <widget class="QPushButton" name="dump1090Button">
        <property name="text">
         <string>Set path</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
+     <item row="6" column="0">
       <widget class="QLabel" name="pPMShiftLabel">
        <property name="text">
         <string>PPM shift</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="6" column="1">
       <widget class="QSpinBox" name="pPMShiftSpinBox"/>
      </item>
-     <item row="2" column="0" colspan="2">
+     <item row="4" column="0" colspan="2">
       <widget class="Line" name="line">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
-     <item row="5" column="0">
+     <item row="7" column="0">
       <widget class="QLabel" name="netRoSizeLabel">
        <property name="text">
         <string>Net-ro-size</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
+     <item row="7" column="1">
       <widget class="QSpinBox" name="netRoSizeSpinBox">
        <property name="maximum">
         <number>1300</number>
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
+     <item row="8" column="0">
       <widget class="QLabel" name="netRoRateLabel">
        <property name="text">
         <string>Net-ro-rate</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
+     <item row="8" column="1">
       <widget class="QSpinBox" name="netRoRateSpinBox"/>
      </item>
-     <item row="7" column="0">
+     <item row="9" column="0">
       <widget class="QLabel" name="netBufferLabel">
        <property name="text">
         <string>Net-buffer</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="1">
+     <item row="9" column="1">
       <widget class="QSpinBox" name="netBufferSpinBox">
        <property name="maximum">
         <number>7</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="2">
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="minutesBeforeRemovingLabel">
+       <property name="text">
+        <string>Minutes before removing</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="minutesBeforeRemovingSpinBox">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>60</number>
        </property>
       </widget>
      </item>

@@ -20,6 +20,8 @@ public:
 
     void refreshDisplay();
 
+    int getMinutesBeforeRemoved();
+
     QFile* getDatabase();
     QString getResourcesPath();
     QString getDump1090Path();
@@ -35,6 +37,8 @@ public slots:
 
     void conditionalShow();
 
+    void setMinutesBeforeRemoved(int value);
+
     void setDatabasePath();
     void setResourcesPath();
     void setDump1090Path();
@@ -48,6 +52,8 @@ private:
     Ui::Settings *ui;
 
     QApplication *app;
+
+    int minutesBeforeRemoved = 5;
 
     QFile databasePath;
     QFile resourcesPath;

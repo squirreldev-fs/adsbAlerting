@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     Settings settings(&a);
     MainWindow window(&acfLive, &acfDatabase, &settings, &locations);
 
-    ADSBFrameReader adsbReader(&acfLive, &acfDatabase, &window);
+    ADSBFrameReader adsbReader(&acfLive, &acfDatabase, &window, &settings);
 
     window.show();
     settings.conditionalShow();
