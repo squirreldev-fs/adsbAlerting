@@ -34,6 +34,8 @@ SOURCES += \
         aircraft.cpp \
         aircraftadsb.cpp \
         aircraftlist.cpp \
+        location.cpp \
+        locations.cpp \
         main.cpp \
         mainwindow.cpp \
         picture.cpp \
@@ -44,11 +46,14 @@ HEADERS += \
         aircraft.h \
         aircraftadsb.h \
         aircraftlist.h \
+        location.h \
+        locations.h \
         mainwindow.h \
         picture.h \
         settings.h
 
 FORMS += \
+        locations.ui \
         mainwindow.ui \
         settings.ui
 

@@ -12,6 +12,7 @@
 #include "aircraftlist.h"
 #include "picture.h"
 #include "settings.h"
+#include "locations.h"
 
 enum ColumnsType{IcaoClmn, CallsignClmn, AltiClmn};
 
@@ -24,7 +25,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(AircraftList *live, AircraftList *database, Settings *settings, QWidget *parent = nullptr);
+    explicit MainWindow(AircraftList *live, AircraftList *database, Settings *settings, Locations *locations, QWidget *parent = nullptr);
     ~MainWindow();
 
     void setInfoVisi(bool visible);
@@ -61,6 +62,7 @@ private:
     Ui::MainWindow *ui;
 
     Settings *settings;
+    Locations *locations;
 
     QTimer resizeTimer;
     int smallWidth;

@@ -13,7 +13,7 @@
     #include <Windows.h>
 #endif
 
-MainWindow::MainWindow(AircraftList *live, AircraftList *database, Settings *settings, QWidget *parent) :
+MainWindow::MainWindow(AircraftList *live, AircraftList *database, Settings *settings, Locations *locations, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -21,6 +21,7 @@ MainWindow::MainWindow(AircraftList *live, AircraftList *database, Settings *set
     interestingAcf = database;
 
     this->settings = settings;
+    this->locations = locations;
 
     // windows
     ui->setupUi(this);
@@ -41,6 +42,7 @@ MainWindow::MainWindow(AircraftList *live, AircraftList *database, Settings *set
     connect(ui->acfTable, SIGNAL(itemSelectionChanged()), this, SLOT(newAcfSelected()));
     connect(ui->bAddToDB, SIGNAL(clicked()), this, SLOT(addToDatabase()));
     connect(ui->bSettings, SIGNAL(clicked()), settings, SLOT(show()));
+    connect(ui->bChangeLocation, SIGNAL(clicked()), locations, SLOT(show()));
 
     // mute / restor sound for alerts
     connect(ui->bMute, SIGNAL(clicked()), this, SLOT(toggleMute()));
@@ -337,7 +339,8 @@ void MainWindow::lauchDump1090()
 #ifdef WIN32
     process.setCreateProcessArgumentsModifier([] (QProcess::CreateProcessArguments *args)
     {
-        args->flags &= ~ulong(CREATE_NO_WINDOW);
+        args->flags &= CREATE_NO_WINDOW;
+        //args->flags |= CREATE_NEW_CONSOLE;
     });
 #endif
     process.setProgram(settings->getDump1090Path());
@@ -346,8 +349,8 @@ void MainWindow::lauchDump1090()
                          "--net-ro-rate", std::to_string(settings->getNetRoRate()).c_str(),
                          "--net-buffer", std::to_string(settings->getNetBuffer()).c_str(),
                          "--ppm", std::to_string(settings->getPPM()).c_str(),
-                         "--lat", "48.72",
-                         "--lon", "10.78"});
+                         "--lat", std::to_string(locations->getCurrentLocation().getLatitude()).c_str(),
+                         "--lon", std::to_string(locations->getCurrentLocation().getLongitude()).c_str()});
     QDir dir = QDir(settings->getDump1090Path());
     dir.cdUp();
     process.setWorkingDirectory(dir.absolutePath());

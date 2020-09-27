@@ -217,6 +217,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="bChangeLocation">
+           <property name="text">
+            <string>Change location</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="bDump1090">
            <property name="text">
             <string>Launch Dump1090</string>
