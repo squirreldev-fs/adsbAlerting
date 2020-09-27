@@ -18,7 +18,8 @@
 
 MainWindow::MainWindow(AircraftList *live, AircraftList *database, Settings *settings, Locations *locations, QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    picture(settings->getResourcesPath())
 {
     seenAcf = live;
     interestingAcf = database;
@@ -33,8 +34,8 @@ MainWindow::MainWindow(AircraftList *live, AircraftList *database, Settings *set
 
     ui->infoLayout->insertWidget(0, &picture);
 
-    soundIcon = QIcon(settings->getResourcesPath()+"sound.png");
-    mutedIcon = QIcon(settings->getResourcesPath()+"muted.png");
+    soundIcon = QIcon(settings->getResourcesPath()+"Sound.png");
+    mutedIcon = QIcon(settings->getResourcesPath()+"Muted.png");
     ui->bMute->setIcon(soundIcon);
 
     connect(ui->bAcfTableFilter, SIGNAL(clicked()), this, SLOT(filterAcfList()));

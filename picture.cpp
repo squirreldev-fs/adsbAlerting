@@ -3,10 +3,11 @@
 
 #include "picture.h"
 
-Picture::Picture(QWidget *parent) : QLabel(parent)
+Picture::Picture(QString resourcesFolderPath, QWidget *parent) : QLabel(parent)
 {
+    this->defaultPicturePath = resourcesFolderPath+"noPicture.jpg";
     this->setMinimumSize(300,200);
-    picturePath = "D:/Cam_Laptop/Documents/Aeronautique/ADSB/resources/noPicture.jpg";
+    picturePath = defaultPicturePath;
     QPixmap pic = QPixmap(picturePath);
     pic=pic.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
     this->setPixmap(pic);
@@ -29,7 +30,7 @@ void Picture::setPicturePath(QString path)
     QPixmap pic = QPixmap(picturePath);
     if(pic.isNull())
     {
-        picturePath = "D:/Cam_Laptop/Documents/Aeronautique/ADSB/resources/noPicture.jpg";
+        picturePath = defaultPicturePath;
         pic = QPixmap(picturePath);
     }
     pic=pic.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);

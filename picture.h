@@ -14,11 +14,12 @@ class Picture : public QLabel
     Q_OBJECT
 
 public:
-    Picture(QWidget *parent = nullptr);
+    Picture(QString resourcesFolderPath, QWidget *parent = nullptr);
     void resizeEvent(QResizeEvent* event);
     void setPicturePath(QString path);
 private:
     QString picturePath;
+    QString defaultPicturePath;
 };
 
 #endif // PICTURE_H
