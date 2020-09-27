@@ -56,7 +56,7 @@ QFile* Settings::getDatabase()
 
 QString Settings::getResourcesPath()
 {
-    return resourcesPath.fileName();
+    return resourcesPath.fileName()+"/";
 }
 
 QString Settings::getDump1090Path()
