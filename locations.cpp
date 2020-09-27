@@ -54,6 +54,8 @@ void Locations::writeFile()
     QFile file("Locations.csv");
     if(file.open(QIODevice::WriteOnly)) {
         QTextStream out(&file);
+        out.setRealNumberNotation(QTextStream::FixedNotation);
+        out.setRealNumberPrecision(6);
         // front = latest
         for(size_t i=0;i<locations.size();i++)
         {
