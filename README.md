@@ -53,7 +53,7 @@ Information is organized in the following order:
 - [x] Add a way to easily change database (not hard-coded).
 - [x] Edit this readme to provide more details about "resources" folder (pictures and alarm sound).
 - [x] Add a dump1090 settings window, to enter the what forms the command line.
-- [ ] Add a location selection when launching dump1090.
-- [ ] Save favorite locations described right above (GPS coords + name).
+- [x] Add a location selection when launching dump1090.
+- [x] Save favorite locations described right above (GPS coords + name).
 - [ ] Add a map to display aircraft with a known position.
 - [ ] Add relative aircraft position (heading and distance to the antenna).
