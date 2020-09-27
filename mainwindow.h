@@ -46,6 +46,8 @@ public slots:
     void newAcfSelected();
     void updateListInfo(QString icao, ColumnsType column, QString value);
 
+    void updateLocation();
+
     void reloadDatabase();
     void addToDatabase();
 

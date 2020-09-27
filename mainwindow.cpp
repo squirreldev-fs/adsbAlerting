@@ -46,6 +46,7 @@ MainWindow::MainWindow(AircraftList *live, AircraftList *database, Settings *set
     connect(ui->bAddToDB, SIGNAL(clicked()), this, SLOT(addToDatabase()));
     connect(ui->bSettings, SIGNAL(clicked()), settings, SLOT(show()));
     connect(ui->bChangeLocation, SIGNAL(clicked()), locations, SLOT(show()));
+    connect(this->locations, SIGNAL(currentLocationChanged()), this, SLOT(updateLocation()));
 
     // mute / restor sound for alerts
     connect(ui->bMute, SIGNAL(clicked()), this, SLOT(toggleMute()));
@@ -218,6 +219,12 @@ void MainWindow::updateListInfo(QString icao, ColumnsType column, QString value)
             }
         }
     }
+}
+
+void MainWindow::updateLocation()
+{
+    QString locationButtonText = locations->getCurrentLocation().getName() + " (change)";
+    ui->bChangeLocation->setText(locationButtonText);
 }
 
 void MainWindow::reloadDatabase()

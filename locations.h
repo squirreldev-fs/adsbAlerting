@@ -17,6 +17,9 @@ class Locations : public QDialog
 public:
     explicit Locations(QApplication *application, QWidget *parent = nullptr);
     ~Locations();
+
+    void conditionalShow();
+
     void readFile();
     void writeFile();
     void clearEntries();
@@ -29,6 +32,9 @@ public slots:
     void selectionChanged();
     void addNewLocation();
     void deleteSelectedLocation();
+
+signals:
+    void currentLocationChanged();
 
 private:
     Ui::Locations *ui;

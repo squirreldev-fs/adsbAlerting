@@ -30,6 +30,18 @@ Locations::~Locations()
     delete ui;
 }
 
+void Locations::conditionalShow()
+{
+    if(locations.empty())
+    {
+        this->show();
+    }
+    else
+    {
+        emit currentLocationChanged();
+    }
+}
+
 void Locations::readFile()
 {
     QFile file("Locations.csv");
@@ -77,7 +89,7 @@ void Locations::clearEntries()
 
 Location Locations::getCurrentLocation()
 {
-    return locations.back();
+    return locations.front();
 }
 
 // public slots
@@ -97,6 +109,7 @@ void Locations::accept()
         ui->listLocations->takeItem(int(selectionIndex));
         ui->listLocations->insertItem(0, currentLocation.getName());
 
+        emit currentLocationChanged();
         writeFile();
         this->hide();
     }

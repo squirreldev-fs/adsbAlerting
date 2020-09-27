@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
     window.show();
     settings.conditionalShow();
-    locations.show();
+    locations.conditionalShow();
 
     return a.exec();
 }
