@@ -48,12 +48,12 @@ Information is organized in the following order:
 - [x] Add a button to quickly access information on the internet about unknown aircraft.
 - [ ] Use Window's notifications system, to alert the user even if the sound is muted. 
 - [ ] Create a UI more efficient to handle / sort a lot of aircraft.
-- [ ] Ensure to only loose the selection when unable to keep it.
-- [ ] Add a parameter in the UI to set the time after an aircraft is removed from the list.
+- [x] Ensure to only loose the selection when unable to keep it.
+- [x] Add a parameter in the UI to set the time after an aircraft is removed from the list.
 - [x] Add a way to easily change database (not hard-coded).
 - [x] Edit this readme to provide more details about "resources" folder (pictures and alarm sound).
 - [x] Add a dump1090 settings window, to enter the what forms the command line.
 - [x] Add a location selection when launching dump1090.
 - [x] Save favorite locations described right above (GPS coords + name).
 - [ ] Add a map to display aircraft with a known position.
-- [ ] Add relative aircraft position (heading and distance to the antenna).
+- [x] Add relative aircraft position (heading and distance to the antenna).
