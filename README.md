@@ -10,14 +10,11 @@ Thanks to this database, additional information can also displayed.
 Using dump1090 to access the ADS-B antenna and sent information over the network. This application then reads this information by opening a TCP socket.
 
 ## Setup
-### main.cpp
-Three paths are defined in this file.
-- The first indicates where the database (see below) is located.
-- The second where are the resources (png pictures included in this repository, a file "bell.wav" and pictures of aircraft).
-- The third indicates where is the application dump1090.
+When launching the program for the first time, the settings window will show to ask you some basic information.
+The resources folder is the one copied in this repository. As a consequence, this folder can be placed where you want, you just need to enter the right path.
+The network values displayed below are used by dump1090. You do not need to change the default values.
 
-### adsbframereader.h
-Here you can change the ADSB server's IP, port and configure the frame (size and indices of different types of information).
+You will be required to enter a location as well. This is used both to launch dump1090 (enhanced precision) and to provide the dstance and bearing of aircraft around.
 
 ## Resources
 ### png pictures included in this repository
