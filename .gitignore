@@ -79,3 +79,6 @@ sounds/
 # Settings
 settings.ini
 locations.csv
+
+# Doxygen
+html/
