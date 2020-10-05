@@ -35,11 +35,6 @@ QString Aircraft::getIcao() const
     return icao;
 }
 
-void Aircraft::setIcao(QString icao)
-{
-    this->icao = icao;
-}
-
 QString Aircraft::getRegistration() const
 {
     return registration;
