@@ -87,47 +87,48 @@ void ADSBFrameReader::onReadyRead()
                 }
             }
 
+            AircraftADSB *currentAircraft = &(*seenAcf)[seenAcf->indexOfIcao(icao)];
             if(data.at(adsbFrameDescr.call) != "")
             {
                 QString callsign = data.at(adsbFrameDescr.call);
-                (*seenAcf)[seenAcf->indexOfIcao(icao)].setCallsignLive(callsign);
+                currentAircraft->setCallsignLive(callsign);
                 userInterface->updateListInfo(icao, CallsignClmn, callsign);
             }
             if(data.at(adsbFrameDescr.alti) != "")
             {
                 int alti = data.at(adsbFrameDescr.alti).toInt();
-                (*seenAcf)[seenAcf->indexOfIcao(icao)].setAltitude(alti);
+                currentAircraft->setAltitude(alti);
                 userInterface->updateListInfo(icao, AltiClmn, QString::number(alti));
             }
             if(data.at(adsbFrameDescr.spd) != "")
             {
                 int spd = data.at(adsbFrameDescr.spd).toInt();
-                (*seenAcf)[seenAcf->indexOfIcao(icao)].setSpeed(spd);
+                currentAircraft->setSpeed(spd);
             }
             if(data.at(adsbFrameDescr.hdg) != "")
             {
                 int hdg = data.at(adsbFrameDescr.hdg).toInt();
-                (*seenAcf)[seenAcf->indexOfIcao(icao)].setHeading(hdg);
+                currentAircraft->setHeading(hdg);
             }
             if(data.at(adsbFrameDescr.lat) != "")
             {
                 float lat = data.at(adsbFrameDescr.lat).toFloat();
-                (*seenAcf)[seenAcf->indexOfIcao(icao)].setLatitude(lat);
+                currentAircraft->setLatitude(lat);
             }
             if(data.at(adsbFrameDescr.lon) != "")
             {
                 float lon = data.at(adsbFrameDescr.lon).toFloat();
-                (*seenAcf)[seenAcf->indexOfIcao(icao)].setLongitude(lon);
+                currentAircraft->setLongitude(lon);
             }
             if(data.at(adsbFrameDescr.vspd) != "")
             {
                 int vSpd = data.at(adsbFrameDescr.vspd).toInt();
-                (*seenAcf)[seenAcf->indexOfIcao(icao)].setVerticalSpeed(vSpd);
+                currentAircraft->setVerticalSpeed(vSpd);
             }
             if(data.at(adsbFrameDescr.sqwk) != "")
             {
                 int sqwk = data.at(adsbFrameDescr.sqwk).toInt();
-                (*seenAcf)[seenAcf->indexOfIcao(icao)].setSqawk(sqwk);
+                currentAircraft->setSqawk(sqwk);
             }
             userInterface->updateLiveInfo();
         }

@@ -10,16 +10,28 @@ namespace Ui {
 class Settings;
 }
 
+/*!
+ * \brief The Settings class is both a container for settings and a window to handle them.
+ */
 class Settings : public QDialog
 {
     Q_OBJECT
 
 public:
+    /*!
+     * \brief Settings constructor.
+     * \param application is used to be able to close the application if needed.
+     * \param parent is passed to the QDialog constructor and is kept for future use.
+     */
     explicit Settings(QApplication *application, QWidget *parent = nullptr);
     ~Settings();
 
+    /*!
+     * \brief refreshDisplay updates the UI according to the stored data.
+     */
     void refreshDisplay();
 
+    // accessors
     int getMinutesBeforeRemoved();
 
     QFile* getDatabase();
@@ -32,9 +44,19 @@ public:
     int getNetBuffer();
 
 public slots:
+    /*!
+     * \brief accept hides the settings window if all paths are defined (database, resources and dump1090 application). Displays an error message otherwise.
+     */
     void accept() override;
+
+    /*!
+     * \brief reject same behavior as accept(), but closes the application if the paths are not all defined.
+     */
     void reject() override;
 
+    /*!
+     * \brief conditionalShow shows the window only if required parameters are not defined (database, resources folder and dump1090 are defined).
+     */
     void conditionalShow();
 
     void setMinutesBeforeRemoved(int value);

@@ -1,14 +1,37 @@
 #ifndef AIRCRAFTADSB_H
 #define AIRCRAFTADSB_H
 
+/*!
+ * \file aircraftadsb.h
+ */
+
 #include "aircraft.h"
 
-enum AlertStatus{NoAlert, AlertRaised, AlertAcknowledged};
+/*!
+ * \brief The AlertStatus enum listing possible alerting states relative to an aircraft.
+ * Either no alert has been raised, or one is currenlty raised or one was raised and has been acknowledged by the user.
+ */
+enum AlertStatus{
+    NoAlert, ///< No alert triggered. Will not be, according to the current implementation.
+    AlertRaised, ///< Alert triggered but not yet acknowledged.
+    AlertAcknowledged ///< Alert was triggered but the user acknowledged it.
+};
 
+/*!
+ * \brief The AircraftADSB class adds all "live" information to Aircraft.
+ */
 class AircraftADSB : public Aircraft
 {
 public:
+    /*!
+     * \brief AircraftADSB will call the Aircraft constructor with "unknown" for every parameter, except for the icao.
+     * \param icao is the minimum parameter required, since it is used as an identifier.
+     */
     AircraftADSB(QString icao);
+
+    /*!
+     * \brief AircraftADSB will call the Aircraft constructor, passing all parameters. See Aircraft for details.
+     */
     AircraftADSB(QString icao, QString registration, QString callsign, QString location, QString type, QString version);
 
     void setAltitude(int alti);
@@ -27,12 +50,35 @@ public:
     int getSquawk() const;
 
     void setCallsignLive(QString callsign);
+
+    /*!
+     * \brief getCallsignLive
+     * \return callsign as written in ADS-B frames.
+     */
     QString getCallsignLive() const;
 
+    /*!
+     * \brief seen is called every time the aircraft has been detected.
+     * Updates the date containing the latest detection.
+     */
     void seen();
+
+    /*!
+     * \brief notSeenForSec
+     * \return number of seconds since the latest message received from this aircraft.
+     */
     int notSeenForSec() const;
 
+    /*!
+     * \brief setAlertStatus sets the ::AlertStatus for this aircraft.
+     * \param see ::AlertStatus.
+     */
     void setAlertStatus(AlertStatus status);
+
+    /*!
+     * \brief getAlertStatus
+     * \return see ::AlertStatus.
+     */
     AlertStatus getAlertStatus() const;
 
 private:
