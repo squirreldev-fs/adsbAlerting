@@ -100,6 +100,7 @@ void Settings::accept()
 void Settings::reject()
 {
     readSettings();
+    refreshDisplay();
     if(allPathsValid())
     {
         this->hide();
@@ -126,19 +127,37 @@ void Settings::setMinutesBeforeRemoved(int value)
 
 void Settings::setDatabasePath()
 {
-    databasePath.setFileName(QFileDialog::getOpenFileName(this, "Database", QString(), "CSV (*.csv)"));
+    QString dir;
+    if(databasePath.exists()) { dir = databasePath.fileName(); } else { dir = ""; }
+    QString newPath = QFileDialog::getOpenFileName(this, "Database file", dir, "CSV (*.csv)");
+    if(!newPath.isNull()) // Do not override if the user pressed cancel
+    {
+        databasePath.setFileName(newPath);
+    }
     refreshDisplay();
 }
 
 void Settings::setResourcesPath()
 {
-    resourcesPath.setFileName(QFileDialog::getExistingDirectory(this));
+    QString dir;
+    if(resourcesPath.exists()) { dir = resourcesPath.fileName(); } else { dir = ""; }
+    QString newPath = QFileDialog::getExistingDirectory(this, "Resources folder", dir);
+    if(!newPath.isNull()) // Do not override if the user pressed cancel
+    {
+        resourcesPath.setFileName(newPath);
+    }
     refreshDisplay();
 }
 
 void Settings::setDump1090Path()
 {
-    dump1090Path.setFileName(QFileDialog::getOpenFileName(this, "Dump1090", QString(), "Application (*)"));
+    QString dir;
+    if(dump1090Path.exists()) { dir = dump1090Path.fileName(); } else { dir = ""; }
+    QString newPath = QFileDialog::getOpenFileName(this, "Dump1090 application", dir, "Application (*)");
+    if(!newPath.isNull()) // Do not override if the user pressed cancel
+    {
+        dump1090Path.setFileName(newPath);
+    }
     refreshDisplay();
 }
 
