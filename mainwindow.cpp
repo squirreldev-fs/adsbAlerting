@@ -74,11 +74,19 @@ MainWindow::~MainWindow()
 void MainWindow::connectionFailed()
 {
     ui->bDump1090->setEnabled(true);
+    ui->bDump1090->setText("Launch Dump1090");
 }
 
 void MainWindow::connectionSucceeded()
 {
-    ui->bDump1090->setEnabled(false);
+    if(QProcess::Running == process.state())
+    {
+        ui->bDump1090->setText("Stop Dump1090");
+    }
+    else // External Dump1090
+    {
+        ui->bDump1090->setEnabled(false);
+    }
 }
 
 void MainWindow::raiseAlert()
@@ -383,26 +391,34 @@ void MainWindow::resetInfo()
 
 void MainWindow::lauchDump1090()
 {
-#ifdef WIN32
-    process.setCreateProcessArgumentsModifier([] (QProcess::CreateProcessArguments *args)
+    if(QProcess::Running == process.state()) // Already started
     {
-        args->flags &= CREATE_NO_WINDOW;
-        //args->flags |= CREATE_NEW_CONSOLE;
-    });
-#endif
-    process.setProgram(settings->getDump1090Path());
-    process.setArguments({"--net",
-                         "--net-ro-size", std::to_string(settings->getNetRoSize()).c_str(),
-                         "--net-ro-rate", std::to_string(settings->getNetRoRate()).c_str(),
-                         "--net-buffer", std::to_string(settings->getNetBuffer()).c_str(),
-                         "--ppm", std::to_string(settings->getPPM()).c_str(),
-                         "--lat", std::to_string(locations->getCurrentLocation().getLatitude()).c_str(),
-                         "--lon", std::to_string(locations->getCurrentLocation().getLongitude()).c_str()});
-    QDir dir = QDir(settings->getDump1090Path());
-    dir.cdUp();
-    process.setWorkingDirectory(dir.absolutePath());
-    process.setProcessChannelMode(QProcess::MergedChannels);
-    process.start();
+        process.kill();
+        ui->bDump1090->setText("Launch Dump1090");
+    }
+    else // Not started yet
+    {
+    #ifdef WIN32
+        process.setCreateProcessArgumentsModifier([] (QProcess::CreateProcessArguments *args)
+        {
+            args->flags &= CREATE_NO_WINDOW;
+            //args->flags |= CREATE_NEW_CONSOLE;
+        });
+    #endif
+        process.setProgram(settings->getDump1090Path());
+        process.setArguments({"--net",
+                             "--net-ro-size", std::to_string(settings->getNetRoSize()).c_str(),
+                             "--net-ro-rate", std::to_string(settings->getNetRoRate()).c_str(),
+                             "--net-buffer", std::to_string(settings->getNetBuffer()).c_str(),
+                             "--ppm", std::to_string(settings->getPPM()).c_str(),
+                             "--lat", std::to_string(locations->getCurrentLocation().getLatitude()).c_str(),
+                             "--lon", std::to_string(locations->getCurrentLocation().getLongitude()).c_str()});
+        QDir dir = QDir(settings->getDump1090Path());
+        dir.cdUp();
+        process.setWorkingDirectory(dir.absolutePath());
+        process.setProcessChannelMode(QProcess::MergedChannels);
+        process.start();
+    }
 }
 
 void MainWindow::readDumpOutput()
