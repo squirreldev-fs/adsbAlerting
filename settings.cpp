@@ -35,9 +35,9 @@ Settings::~Settings()
 void Settings::refreshDisplay()
 {
     ui->minutesBeforeRemovingSpinBox->setValue(minutesBeforeRemoved);
-    ui->databaseButton->setText(getPathText(&databasePath));
-    ui->resourcesButton->setText(getPathText(&resourcesPath));
-    ui->dump1090Button->setText(getPathText(&dump1090Path));
+    ui->databaseButton->setText(" "+getPathText(&databasePath)+" ");
+    ui->resourcesButton->setText(" "+getPathText(&resourcesPath)+" ");
+    ui->dump1090Button->setText(" "+getPathText(&dump1090Path)+" ");
     ui->pPMShiftSpinBox->setValue(ppmShift);
     ui->netRoSizeSpinBox->setValue(netRoSize);
     ui->netRoRateSpinBox->setValue(netRoRate);
