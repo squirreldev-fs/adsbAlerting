@@ -23,6 +23,11 @@ Locations::Locations(QApplication *application, QWidget *parent) :
 
     readFile();
     clearEntries();
+
+    if(!locations.empty())
+    {
+        currentLocation = locations.front();
+    }
 }
 
 Locations::~Locations()
