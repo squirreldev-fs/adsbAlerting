@@ -64,6 +64,10 @@ MainWindow::MainWindow(AircraftList *live, AircraftList *database, Settings *set
     ui->bAcknowlege->setEnabled(false);
     this->reloadDatabase();
     this->setInfoVisi(false);
+    QIcon trayIconPicture("ADSBInterface.ico");
+    notificationIcon.addFile("notificationIcon.png");
+    trayIcon.setIcon(trayIconPicture);
+    trayIcon.show();
 }
 
 MainWindow::~MainWindow()
@@ -89,10 +93,12 @@ void MainWindow::connectionSucceeded()
     }
 }
 
-void MainWindow::raiseAlert()
+void MainWindow::raiseAlert(QString icao)
 {
     triggerAlerts();
     alarmTimer.start(alarmIntervalMS);
+    QString message = "Aircraft " + icao + " have been detected!";
+    trayIcon.showMessage("ADSB alert", message, notificationIcon, 5000);
     ui->bAcknowlege->setEnabled(true);
 }
 

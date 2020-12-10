@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QProcess>
 #include <QMessageBox>
+#include <QSystemTrayIcon>
 
 #include "aircraftlist.h"
 #include "picture.h"
@@ -75,7 +76,7 @@ public:
     /*!
      * \brief raiseAlert triggers the alerting system (timed sound alarm) and activates the button to acknowledge the alert.
      */
-    void raiseAlert();
+    void raiseAlert(QString icao);
 
 public slots:
     /*!
@@ -196,6 +197,9 @@ private:
     QProcess process;
 
     QMessageBox msgBox;
+
+    QSystemTrayIcon trayIcon;
+    QIcon notificationIcon;
 };
 
 #endif // MAINWINDOW_H

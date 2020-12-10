@@ -83,7 +83,7 @@ void ADSBFrameReader::onReadyRead()
                 if(interestingAcf->contains(icao)) // alarm
                 {
                     seenAcf->back().setAlertStatus(AlertRaised);
-                    userInterface->raiseAlert();
+                    userInterface->raiseAlert(icao);
                 }
             }
 
