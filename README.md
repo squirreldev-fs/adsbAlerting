@@ -43,7 +43,7 @@ Information is organized in the following order:
 - [ ] Separate alerting list from database.
 - [ ] Large review of database, to make use of data available online.
 - [x] Add a button to quickly access information on the internet about unknown aircraft.
-- [ ] Use Window's notifications system, to alert the user even if the sound is muted. 
+- [x] Use Window's notifications system, to alert the user even if the sound is muted. 
 - [ ] Create a UI more efficient to handle / sort a lot of aircraft.
 - [x] Ensure to only loose the selection when unable to keep it.
 - [x] Add a parameter in the UI to set the time after an aircraft is removed from the list.
