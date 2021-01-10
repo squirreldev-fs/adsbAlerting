@@ -47,7 +47,7 @@ void ADSBFrameReader::onReadyRead()
     if(data.size() == adsbFrameDescr.size)
     {
         QString icao = data.at(adsbFrameDescr.icao);
-        if(icao != "")
+        if(icao != "" && icao != "000000")
         {
             int i=0;
             while(i<seenAcf->size()) // remove acf not seen for a while
